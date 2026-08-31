@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getOrderedRoleRecommendations, OrderedLearningStep } from '@/lib/recommendationEngine';
+import { getCurrentUser, UserProfile } from '@/lib/authStorage';
+import { DEMO_USER } from '@/lib/mockData';
 import styles from './learn.module.css';
 
 function formatDuration(seconds: string) {
@@ -11,12 +13,27 @@ function formatDuration(seconds: string) {
   return h > 0 ? `${h}h ${m}m` : `${m}m`;
 }
 
+const SAMPLE_COURSES = [
+  {
+    id: 'python-basics-01',
+    title: 'Python for Statistical Officers — Module 1: Introduction',
+    description: 'Learn the fundamentals of Python programming tailored for statistical analysis. Covers variables, data types, basic operations, and your first Python script.',
+    competency: 'Python Programming',
+    difficulty: 'Beginner',
+    duration: '45 min',
+    provider: 'StatPath AI Curated',
+    topics: ['Variables & Data Types', 'Basic Operations', 'Print Statements', 'Python Setup'],
+    hasContent: true,
+  }
+];
+
 export default function LearnPage() {
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [selectedRole, setSelectedRole] = useState<string>('Statistical Officer');
-  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [assessmentResults, setAssessmentResults] = useState<any>(null);
 
   useEffect(() => {
+    setUser(getCurrentUser());
     if (typeof window !== 'undefined') {
       try {
         const stored = localStorage.getItem('statpath_assessment_results');
@@ -27,129 +44,167 @@ export default function LearnPage() {
     }
   }, []);
 
-  // Strictly fetched & ordered recommendation sequence consuming public/content-list-data.json
+  const isDemo = !user || user.empId === DEMO_USER.employeeId;
+
+  // Demo user: show iGOT ordered path
   const orderedPath: OrderedLearningStep[] = getOrderedRoleRecommendations(selectedRole);
 
+  // DEMO USER VIEW
+  if (isDemo) {
+    return (
+      <div>
+        <div className={styles.pageHeader}>
+          <div>
+            <h1 className={styles.title}>Your Sequential iGOT Learning Path</h1>
+            <p className={styles.subtitle}>Curated directly from the official iGOT Karmayogi catalog for your designation.</p>
+          </div>
+          <div className={styles.pathMeta}>
+            <div className={styles.metaItem}>🎯 Target Role: <strong>{selectedRole}</strong></div>
+            <div className={styles.metaItem}>📚 {orderedPath.length} Sequential iGOT Courses</div>
+          </div>
+        </div>
+
+        <div className={`card ${styles.whyCard}`} style={{ marginBottom: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+            <div>
+              <div className={styles.whyTitle}>📌 Select Officer Role Profile:</div>
+              <p style={{ fontSize: 13, color: 'var(--gray-600)' }}>StatPath AI dynamically matches and orders courses strictly from iGOT content-list-data.json based on official role competency requirements.</p>
+            </div>
+            <select 
+              value={selectedRole} 
+              onChange={e => setSelectedRole(e.target.value)}
+              className="form-select"
+              style={{ width: 260, fontWeight: 700 }}
+            >
+              <option value="Statistical Officer">Statistical Officer</option>
+              <option value="Data Analyst / Investigator">Data Analyst / Investigator</option>
+            </select>
+          </div>
+        </div>
+
+        <div className={styles.courseList}>
+          {orderedPath.map((step, idx) => {
+            const c = step.course;
+            return (
+              <div key={c.identifier} className={`card ${styles.phaseDetail}`} style={{ marginBottom: 20, borderLeft: '4px solid var(--ux4g-gov-navy)' }}>
+                <div className={styles.pdHeader}>
+                  <div>
+                    <div className="badge badge-karnataka" style={{ marginBottom: 6 }}>
+                      {step.phaseName}
+                    </div>
+                    <h2 className={styles.pdTitle}>{c.name}</h2>
+                    <p className={styles.pdDesc}>{c.description || step.recommendationReason}</p>
+                  </div>
+                  <div className="badge badge-primary">
+                    {step.targetCompetency}
+                  </div>
+                </div>
+
+                <div className={styles.courseRow} style={{ background: '#F8FAFC', padding: 16, borderRadius: 8, marginTop: 12 }}>
+                  <div className={styles.courseNum}>#{idx + 1}</div>
+                  <img src={c.appIcon} alt={c.name} className={styles.courseThumb} onError={e => (e.currentTarget.style.display = 'none')} />
+                  <div className={styles.courseInfo}>
+                    <div className={styles.courseName}>{c.name}</div>
+                    <div className={styles.courseMeta}>
+                      <span>🏛️ Provider: <strong>{c.source}</strong></span>
+                      <span>⏱️ Duration: <strong>{formatDuration(c.duration)}</strong></span>
+                      <span>🆔 iGOT ID: <code>{c.identifier}</code></span>
+                    </div>
+                    <div style={{ marginTop: 8, fontSize: 12, color: 'var(--gray-700)', background: '#EFF6FF', padding: '6px 10px', borderRadius: 4 }}>
+                      🧠 <strong>Why Required in Order:</strong> {step.recommendationReason}
+                    </div>
+                  </div>
+                  <div className={styles.courseActions}>
+                    <Link href="/dashboard/learn/course" className="btn btn-primary btn-sm">
+                      Start Learning →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // REGISTERED USER VIEW
   return (
     <div>
       <div className={styles.pageHeader}>
         <div>
-          <h1 className={styles.title}>Your Sequential iGOT Learning Path</h1>
-          <p className={styles.subtitle}>Curated directly from the official iGOT Karmayogi catalog (content-list-data.json) for your designation.</p>
+          <h1 className={styles.title}>Your Personalized Learning Path</h1>
+          <p className={styles.subtitle}>
+            Courses curated by StatPath AI based on your baseline assessment and competency profile.
+          </p>
         </div>
         <div className={styles.pathMeta}>
-          <div className={styles.metaItem}>🎯 Target Role: <strong>{selectedRole}</strong></div>
-          <div className={styles.metaItem}>📚 {orderedPath.length} Sequential iGOT Courses</div>
+          <div className={styles.metaItem}>👤 {user?.designation || 'Officer'}</div>
+          <div className={styles.metaItem}>📚 {SAMPLE_COURSES.length} Available Courses</div>
         </div>
       </div>
 
       {assessmentResults?.weakTopics?.length > 0 && (
         <div style={{ background: '#EFF6FF', border: '1px solid #93C5FD', padding: '14px 18px', borderRadius: 8, marginBottom: 20 }}>
           <div style={{ fontWeight: 700, color: '#1E40AF', fontSize: 14 }}>
-            🤖 StatPath AI Recommendation System (Active Baseline Diagnostic):
+            🤖 StatPath AI Recommendation Engine:
           </div>
           <p style={{ fontSize: 13, color: '#1E3A8A', marginTop: 4, marginBottom: 0 }}>
-            Based on your baseline assessment score of <strong>{assessmentResults.score}% ({assessmentResults.scoreFormatted})</strong>, the recommendation engine has prioritized courses bridging your identified section gaps: <strong>{assessmentResults.weakTopics.join(', ')}</strong>.
+            Based on your baseline assessment score of <strong>{assessmentResults.score}% ({assessmentResults.scoreFormatted})</strong>, courses are prioritized to bridge your identified gaps: <strong>{assessmentResults.weakTopics.join(', ')}</strong>.
           </p>
         </div>
       )}
 
-      {/* Role Selection Selector */}
-      <div className={`card ${styles.whyCard}`} style={{ marginBottom: 24 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <div>
-            <div className={styles.whyTitle}>📌 Select Officer Role Profile:</div>
-            <p style={{ fontSize: 13, color: 'var(--gray-600)' }}>StatPath AI dynamically matches and orders courses strictly from iGOT content-list-data.json based on official role competency requirements.</p>
-          </div>
-          <select 
-            value={selectedRole} 
-            onChange={e => setSelectedRole(e.target.value)}
-            className="form-select"
-            style={{ width: 260, fontWeight: 700 }}
-          >
-            <option value="Statistical Officer">Statistical Officer</option>
-            <option value="Data Analyst / Investigator">Data Analyst / Investigator</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Sequential Journey Timeline */}
+      {/* Sample Courses for Registered Users */}
       <div className={styles.courseList}>
-        {orderedPath.map((step, idx) => {
-          const c = step.course;
-          return (
-            <div key={c.identifier} className={`card ${styles.phaseDetail}`} style={{ marginBottom: 20, borderLeft: '4px solid var(--ux4g-gov-navy)' }}>
-              <div className={styles.pdHeader}>
-                <div>
-                  <div className="badge badge-karnataka" style={{ marginBottom: 6 }}>
-                    {step.phaseName}
-                  </div>
-                  <h2 className={styles.pdTitle}>{c.name}</h2>
-                  <p className={styles.pdDesc}>{c.description || step.recommendationReason}</p>
+        {SAMPLE_COURSES.map((course, idx) => (
+          <div key={course.id} className={`card ${styles.phaseDetail}`} style={{ marginBottom: 20, borderLeft: '4px solid var(--ux4g-gov-navy)' }}>
+            <div className={styles.pdHeader}>
+              <div>
+                <div className="badge badge-primary" style={{ marginBottom: 6 }}>
+                  {course.competency}
                 </div>
-                <div className="badge badge-primary">
-                  {step.targetCompetency}
+                <h2 className={styles.pdTitle}>{course.title}</h2>
+                <p className={styles.pdDesc}>{course.description}</p>
+              </div>
+              <div className="badge badge-success">{course.difficulty}</div>
+            </div>
+
+            <div className={styles.courseRow} style={{ background: '#F8FAFC', padding: 16, borderRadius: 8, marginTop: 12 }}>
+              <div className={styles.courseNum}>#{idx + 1}</div>
+              <div className={styles.courseInfo}>
+                <div className={styles.courseName}>{course.title}</div>
+                <div className={styles.courseMeta}>
+                  <span>🏛️ Provider: <strong>{course.provider}</strong></span>
+                  <span>⏱️ Duration: <strong>{course.duration}</strong></span>
+                  <span>📊 Difficulty: <strong>{course.difficulty}</strong></span>
+                </div>
+                <div style={{ marginTop: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {course.topics.map(t => (
+                    <span key={t} style={{ padding: '4px 10px', borderRadius: 12, background: '#DBEAFE', color: '#1E40AF', fontSize: 11, fontWeight: 600 }}>
+                      {t}
+                    </span>
+                  ))}
                 </div>
               </div>
-
-              <div className={styles.courseRow} style={{ background: '#F8FAFC', padding: 16, borderRadius: 8, marginTop: 12 }}>
-                <div className={styles.courseNum}>#{idx + 1}</div>
-                <img src={c.appIcon} alt={c.name} className={styles.courseThumb} onError={e => (e.currentTarget.style.display = 'none')} />
-                <div className={styles.courseInfo}>
-                  <div className={styles.courseName}>{c.name}</div>
-                  <div className={styles.courseMeta}>
-                    <span>🏛️ Provider: <strong>{c.source}</strong></span>
-                    <span>⏱️ Duration: <strong>{formatDuration(c.duration)}</strong></span>
-                    <span>🆔 iGOT ID: <code>{c.identifier}</code></span>
-                  </div>
-                  <div style={{ marginTop: 8, fontSize: 12, color: 'var(--gray-700)', background: '#EFF6FF', padding: '6px 10px', borderRadius: 4 }}>
-                    🧠 <strong>Why Required in Order:</strong> {step.recommendationReason}
-                  </div>
-                </div>
-                <div className={styles.courseActions}>
-                  <button className="btn btn-primary btn-sm" onClick={() => setSelectedCourse(c.identifier)}>
-                    Learn with AI ✨
-                  </button>
-                  <a 
-                    href={`https://igotkarmayogi.gov.in/app/toc/${c.identifier}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="btn btn-secondary btn-sm"
-                  >
-                    Open on iGOT →
-                  </a>
-                </div>
+              <div className={styles.courseActions}>
+                <Link href="/dashboard/learn/course" className="btn btn-primary btn-sm" style={{ whiteSpace: 'nowrap' }}>
+                  Start Learning →
+                </Link>
               </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* AI Learning Mode Modal */}
-      {selectedCourse && (
-        <div className={styles.modalOverlay} onClick={() => setSelectedCourse(null)}>
-          <div className={styles.modal} onClick={e => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h3>Choose Learning Mode</h3>
-              <button onClick={() => setSelectedCourse(null)}>✕</button>
-            </div>
-            <div className={styles.modeCards}>
-              <Link href="/dashboard/learn/ai-guided" className={styles.modeCard}>
-                <div className={styles.modeIcon}>🤖</div>
-                <div className={styles.modeTitle}>AI-Guided Learning</div>
-                <div className={styles.modeDesc}>Content broken into micro-units with flashcards, summaries, examples, and interactive questions. Best for deep understanding.</div>
-                <div className="btn btn-primary" style={{ marginTop: 12, width: '100%', textAlign: 'center', padding: '10px' }}>Start AI Learning ✨</div>
-              </Link>
-              <a href="https://igotkarmayogi.gov.in" target="_blank" rel="noopener noreferrer" className={styles.modeCard}>
-                <div className={styles.modeIcon}>📚</div>
-                <div className={styles.modeTitle}>Learn on iGOT Directly</div>
-                <div className={styles.modeDesc}>Navigate directly to the official iGOT Karmayogi course. Progress will be tracked and reflected here.</div>
-                <div className="btn btn-secondary" style={{ marginTop: 12, width: '100%', textAlign: 'center', padding: '10px' }}>Open in iGOT →</div>
-              </a>
             </div>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
+
+      {/* Placeholder Notice */}
+      <div className="card" style={{ textAlign: 'center', padding: 32, background: '#F8FAFC', border: '1px dashed #CBD5E1' }}>
+        <div style={{ fontSize: 36, marginBottom: 8 }}>📚</div>
+        <div style={{ fontWeight: 700, fontSize: 15, color: '#0F172A' }}>More Courses Coming Soon</div>
+        <p style={{ fontSize: 13, color: '#64748B', marginTop: 4, maxWidth: 500, margin: '4px auto 0 auto' }}>
+          StatPath AI will continuously fetch and recommend official iGOT Karmayogi courses based on your evolving competency profile and assessment performance.
+        </p>
+      </div>
     </div>
   );
 }
