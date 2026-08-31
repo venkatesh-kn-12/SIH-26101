@@ -137,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
                   <Link href="/dashboard/notifications" className={styles.iconBtn} title="Notifications">
                     🔔 <span className={styles.notifBadge}>3</span>
                   </Link>
-                  <Link href={user.role === 'admin' ? '/admin' : user.role === 'trainer' ? '/trainer' : '/dashboard'} className={styles.userProfileBtn}>
+                  <Link href={user.role === 'admin' ? '/admin' : '/dashboard'} className={styles.userProfileBtn}>
                     <div className={styles.avatar}>{user.name.charAt(0)}</div>
                     <div className={styles.userInfoHideMobile}>
                       <span className={styles.userName}>{user.name}</span>

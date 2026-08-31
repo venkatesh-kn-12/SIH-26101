@@ -17,7 +17,6 @@ export default function LoginPage() {
     await new Promise(r => setTimeout(r, 1000));
     if (form.empId && form.password) {
       if (form.role === 'admin') router.push('/admin');
-      else if (form.role === 'trainer') router.push('/trainer');
       else router.push('/dashboard');
     } else {
       setError('Please enter Employee ID and password.');
@@ -48,7 +47,6 @@ export default function LoginPage() {
               <label className="form-label">Login As</label>
               <select className="form-select" value={form.role} onChange={e => setForm({...form, role: e.target.value})}>
                 <option value="employee">Employee / Official</option>
-                <option value="trainer">Trainer / Faculty</option>
                 <option value="admin">Administrator</option>
               </select>
             </div>
@@ -67,7 +65,7 @@ export default function LoginPage() {
           <div className={styles.demoBox}>
             <div className={styles.demoTitle}>Demo Accounts</div>
             <div className={styles.demoAccounts}>
-              {[{label:'Employee', id:'MOS/2019/1842', role:'employee'}, {label:'Trainer', id:'NSSTA/T/001', role:'trainer'}, {label:'Admin', id:'ADMIN/001', role:'admin'}].map(d => (
+              {[{label:'Employee', id:'MOS/2019/1842', role:'employee'}, {label:'Admin', id:'ADMIN/001', role:'admin'}].map(d => (
                 <button key={d.role} className={styles.demoBtn} onClick={() => { setForm({empId:d.id, password:'demo123', role:d.role}); }}>
                   <strong>{d.label}</strong><span>{d.id}</span>
                 </button>

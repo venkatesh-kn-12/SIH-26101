@@ -26,16 +26,11 @@
 - **Career Progression Engine**: Skill gap recommendations aligned with promotional roadmaps in government statistical Cadres.
 - **AI Studio**: Interactive statistical playground and AI tutor assistant.
 
-### 2. 👩‍🏫 Trainer & Educator Portal
-- **Curriculum Builder**: Design role-specific modules and align assessments with NSQF/NCVET guidelines.
-- **Class Analytics**: Real-time cohort progression tracking and skill deficiency alerts.
-- **Automated Evaluation**: AI-assisted grading and item-response analytics.
-
-### 3. 🏢 Admin & Governance Dashboard
+### 2. 🏢 Admin & Governance Dashboard
 - **Regional & Departmental Skill Maps**: Real-time insights into state-wide capability readiness for MoSPI & DES officials.
 - **FRAC & NCVET Alignment**: Standardized framework compliance monitoring.
 
-### 4. 🌐 Multilingual Accessibility
+### 3. 🌐 Multilingual Accessibility
 - Real-time language switching supporting 12+ official Indian languages (Hindi, Kannada, Tamil, Telugu, Marathi, Bengali, etc.).
 
 ---
@@ -116,7 +111,6 @@ statpath-ai/
 │   │   ├── auth/          # Login & Signup forms
 │   │   ├── dashboard/     # Officer/Learner dashboard suite
 │   │   ├── onboarding/    # Diagnostic competency assessment
-│   │   ├── trainer/       # Educator/Trainer portal
 │   │   ├── layout.tsx     # Root layout with providers
 │   │   └── page.tsx       # Landing page
 │   ├── components/        # Reusable UI components (Header, Logo, Translator)

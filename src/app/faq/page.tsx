@@ -7,10 +7,10 @@ export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const faqs = [
-    { q: 'Who can access StatPath AI?', a: 'StatPath AI is built for officials, investigators, statistical officers, analysts, trainers, and administrators in India\'s Official Statistical System, including MoSPI, NSSO, CSO, and state Directorates of Economics and Statistics (such as DES Karnataka).' },
+    { q: 'Who can access StatPath AI?', a: 'StatPath AI is built for officials, investigators, statistical officers, analysts, and administrators in India\'s Official Statistical System, including MoSPI, NSSO, CSO, and state Directorates of Economics and Statistics (such as DES Karnataka).' },
     { q: 'How does StatPath AI complement iGOT Karmayogi?', a: 'iGOT Karmayogi provides the learning course repository. StatPath AI provides the skill intelligence layer—it maps your designation, runs baseline assessments, analyzes skill gaps, recommends phased iGOT courses, and continuously tracks your competency twin growth.' },
     { q: 'Is my assessment score visible publicly or to my peers?', a: 'No. Individual assessment details and skill gap analysis are strictly private to you and authorized personnel according to role-based security settings.' },
-    { q: 'Can trainers use AI to generate assessments from official PDFs?', a: 'Yes! The AI Knowledge Studio allows trainers and officials to upload official documents (such as sampling manuals or survey reports) and generate customized MCQs with source citations.' },
+    { q: 'Can officials use AI to generate assessments from official PDFs?', a: 'Yes! The AI Knowledge Studio allows officials and administrators to upload official documents (such as sampling manuals or survey reports) and generate customized MCQs with source citations.' },
     { q: 'Does StatPath AI support Kannada language?', a: 'Yes. StatPath AI includes full bilingual support (English and Kannada / ಕನ್ನಡ) along with accessibility font-size scaling and high-contrast view options.' },
     { q: 'How often are competency profiles updated?', a: 'Profiles update continuously after completing micro-learning units, passing assessment quizzes, and logging verified course completions.' },
   ];

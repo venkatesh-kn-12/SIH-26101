@@ -1,5 +1,5 @@
 // Re-export all types — required because mockData imports from this file
-export type UserRole = 'employee' | 'trainer' | 'admin';
+export type UserRole = 'employee' | 'admin';
 export interface User { id: string; name: string; employeeId: string; email: string; designation: string; department: string; organisation: string; rank: string; role: UserRole; onboardingComplete: boolean; profileComplete: boolean; }
 export interface CompetencyScore { id: string; name: string; category: string; current: number; required: number; gap: 'low' | 'medium' | 'high' | 'none'; timeline: { month: string; score: number }[]; }
 export interface SkillProfile { userId: string; strengths: CompetencyScore[]; gaps: CompetencyScore[]; futureSkills: CompetencyScore[]; overallScore: number; lastUpdated: string; careerReadiness: number; }
