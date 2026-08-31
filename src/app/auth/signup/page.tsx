@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from '../auth.module.css';
+import { TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
 import { registerUser } from '@/lib/authStorage';
 
 const DEPARTMENTS = [
@@ -40,6 +41,8 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [deptDropdownOpen, setDeptDropdownOpen] = useState(false);
   const [desgDropdownOpen, setDesgDropdownOpen] = useState(false);
+  const [deptOther, setDeptOther] = useState('');
+  const [designationOther, setDesignationOther] = useState('');
   
   const [form, setForm] = useState({ 
     name: '', 
@@ -85,20 +88,31 @@ export default function SignupPage() {
       setError('Please select your Department / Division.');
       return;
     }
+    if (form.dept === 'Other' && !deptOther.trim()) {
+      setError('Please specify your Department / Division in the text box provided.');
+      return;
+    }
     if (!form.designation.trim()) {
       setError('Please select your Designation.');
+      return;
+    }
+    if (form.designation === 'Other' && !designationOther.trim()) {
+      setError('Please specify your Designation in the text box provided.');
       return;
     }
 
     setLoading(true);
     await new Promise(r => setTimeout(r, 600));
     
+    const finalDept = form.dept === 'Other' ? deptOther.trim() : form.dept.trim();
+    const finalDesignation = form.designation === 'Other' ? designationOther.trim() : form.designation.trim();
+
     registerUser({
       name: form.name.trim(),
       empId: form.empId.trim(),
       email: form.email.trim(),
-      dept: form.dept.trim(),
-      designation: form.designation.trim(),
+      dept: finalDept,
+      designation: finalDesignation,
       organisation: form.organisation.trim(),
       rank: 'Group A',
       role: 'employee',
@@ -113,7 +127,10 @@ export default function SignupPage() {
       <div className={styles.authLeft}>
         <Link href="/" className={styles.backLink}>← Back to Home</Link>
         <div className={styles.authBrand}>
-          <div className={styles.authLogo}>📈 StatPath AI</div>
+          <div className={styles.authLogo} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <TrendingUp size={24} color="#FF9933" />
+            <span>StatPath AI</span>
+          </div>
           <div className={styles.authTagline}>Create Official Account</div>
           <div className={styles.authGovBadge}>Government of India | MoSPI</div>
         </div>
@@ -241,6 +258,20 @@ export default function SignupPage() {
                 )}
               </div>
 
+              {/* Text box if Division is Other */}
+              {form.dept === 'Other' && (
+                <div className="form-group" style={{ marginTop: -4 }}>
+                  <label className="form-label">Specify Department / Division <span style={{ color: '#C8102E' }}>*</span></label>
+                  <input 
+                    className="form-input" 
+                    placeholder="e.g. Regional Office / Field Division Name" 
+                    value={deptOther} 
+                    onChange={e => setDeptOther(e.target.value)} 
+                    required 
+                  />
+                </div>
+              )}
+
               {/* Scrollable Designation Dropdown */}
               <div className="form-group" style={{ position: 'relative' }}>
                 <label className="form-label">Designation <span style={{ color: '#C8102E' }}>*</span></label>
@@ -304,6 +335,20 @@ export default function SignupPage() {
                   </div>
                 )}
               </div>
+
+              {/* Text box if Designation is Other */}
+              {form.designation === 'Other' && (
+                <div className="form-group" style={{ marginTop: -4 }}>
+                  <label className="form-label">Specify Designation <span style={{ color: '#C8102E' }}>*</span></label>
+                  <input 
+                    className="form-input" 
+                    placeholder="e.g. Senior Research Officer / Consultant" 
+                    value={designationOther} 
+                    onChange={e => setDesignationOther(e.target.value)} 
+                    required 
+                  />
+                </div>
+              )}
 
               <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
                 <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => setStep(1)}>

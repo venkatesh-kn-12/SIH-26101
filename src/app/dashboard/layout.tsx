@@ -8,33 +8,33 @@ import { useLanguage, SUPPORTED_LANGUAGES, Language } from '@/lib/LanguageContex
 import { IndiaFlag } from '@/components/IndiaFlag';
 import { StatPathLogo } from '@/components/StatPathLogo';
 import { getCurrentUser, logoutUser, UserProfile } from '@/lib/authStorage';
+import { Home, User, BarChart3, BookOpen, Zap, FileText, Target, Bot, Bell, LogOut, Globe } from 'lucide-react';
 
 const NAV = [
-  { href: '/dashboard', icon: '🏠', label: 'Overview' },
-  { href: '/dashboard/profile', icon: '👤', label: 'My Profile' },
-  { href: '/dashboard/competency', icon: '📊', label: 'Competency Map' },
-  { href: '/dashboard/learn', icon: '📚', label: 'Learning Path' },
-  { href: '/dashboard/daily', icon: '⚡', label: 'Daily Learning' },
-  { href: '/dashboard/assess', icon: '📝', label: 'Assessments' },
-  { href: '/dashboard/career', icon: '🎯', label: 'Career Simulator' },
-  { href: '/dashboard/studio', icon: '🤖', label: 'AI Knowledge Studio' },
-  { href: '/dashboard/notifications', icon: '🔔', label: 'Notifications' },
+  { href: '/dashboard', icon: <Home size={18} />, label: 'Overview' },
+  { href: '/dashboard/profile', icon: <User size={18} />, label: 'My Profile' },
+  { href: '/dashboard/competency', icon: <BarChart3 size={18} />, label: 'Competency Map' },
+  { href: '/dashboard/learn', icon: <BookOpen size={18} />, label: 'Learning Path' },
+  { href: '/dashboard/daily', icon: <Zap size={18} />, label: 'Daily Learning' },
+  { href: '/dashboard/assess', icon: <FileText size={18} />, label: 'Assessments' },
+  { href: '/dashboard/career', icon: <Target size={18} />, label: 'Career Simulator' },
+  { href: '/dashboard/studio', icon: <Bot size={18} />, label: 'AI Knowledge Studio' },
+  { href: '/dashboard/notifications', icon: <Bell size={18} />, label: 'Notifications' },
 ];
 
 const MOBILE_BOTTOM_NAV = [
-  { href: '/dashboard', icon: '🏠', label: 'Home' },
-  { href: '/dashboard/learn', icon: '📚', label: 'Learn' },
-  { href: '/dashboard/competency', icon: '📊', label: 'Skills' },
-  { href: '/dashboard/assess', icon: '📝', label: 'Assess' },
-  { href: '/dashboard/profile', icon: '👤', label: 'Profile' },
+  { href: '/dashboard', icon: <Home size={20} />, label: 'Home' },
+  { href: '/dashboard/learn', icon: <BookOpen size={20} />, label: 'Learn' },
+  { href: '/dashboard/competency', icon: <BarChart3 size={20} />, label: 'Skills' },
+  { href: '/dashboard/assess', icon: <FileText size={20} />, label: 'Assess' },
+  { href: '/dashboard/profile', icon: <User size={20} />, label: 'Profile' },
 ];
-
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const unread = NOTIFICATIONS.filter(n => !n.read).length;
 
   useEffect(() => {
@@ -59,24 +59,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             </Link>
           )}
-          <button className={styles.toggleBtn} onClick={() => setSidebarOpen(!sidebarOpen)}>
+          <button 
+            className={styles.toggleBtn} 
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+          >
             {sidebarOpen ? '◀' : '▶'}
           </button>
         </div>
 
-        <nav className={styles.sidebarNav}>
+        <nav className={styles.nav}>
           {NAV.map(item => {
             const active = pathname === item.href;
             return (
-              <Link key={item.href} href={item.href} className={`${styles.navItem} ${active ? styles.navActive : ''}`}>
+              <Link 
+                key={item.href} 
+                href={item.href} 
+                className={`${styles.navItem} ${active ? styles.navActive : ''}`}
+                title={!sidebarOpen ? item.label : undefined}
+              >
                 <span className={styles.navIcon}>{item.icon}</span>
-                {sidebarOpen && (
-                  <span className={styles.navLabel}>
-                    {item.label}
-                    {item.href === '/dashboard/notifications' && unread > 0 && (
-                      <span className={styles.badge}>{unread}</span>
-                    )}
-                  </span>
+                {sidebarOpen && <span className={styles.navLabel}>{item.label}</span>}
+                {item.href === '/dashboard/notifications' && unread > 0 && sidebarOpen && (
+                  <span className={styles.badge}>{unread}</span>
                 )}
               </Link>
             );
@@ -85,8 +90,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <div className={styles.sidebarFooter}>
           {sidebarOpen && (
-            <div className={styles.userCard}>
-              <div className={styles.avatar}>{userInitials}</div>
+            <div className={styles.userProfile}>
+              <div className={styles.userAvatar}>{userInitials}</div>
               <div>
                 <div className={styles.userName}>{currentUser?.name || 'Priya Sharma'}</div>
                 <div className={styles.userRole}>{currentUser?.designation || 'Statistical Officer'}</div>
@@ -94,7 +99,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           )}
           <Link href="/" className={styles.logoutBtn} onClick={() => logoutUser()}>
-            <span>🚪</span>
+            <LogOut size={16} />
             {sidebarOpen && <span>Logout</span>}
           </Link>
         </div>
@@ -112,8 +117,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </div>
           <div className={styles.topBarRight}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span style={{ fontSize: '13px' }}>🌐</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Globe size={14} color="#FF9933" />
               <select 
                 value={language}
                 onChange={e => setLanguage(e.target.value as Language)}
@@ -141,7 +146,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <span>MoSPI • SIH Initiative</span>
             </div>
             <Link href="/dashboard/notifications" className={styles.notifBtn}>
-              🔔
+              <Bell size={16} />
               {unread > 0 && <span className={styles.notifDot}>{unread}</span>}
             </Link>
           </div>
@@ -151,7 +156,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {children}
         </main>
 
-        {/* Dedicated Mobile Bottom Navigation (Requirement #30) */}
+        {/* Mobile Bottom Navigation */}
         <nav className={styles.mobileBottomNav}>
           {MOBILE_BOTTOM_NAV.map(item => {
             const active = pathname === item.href;

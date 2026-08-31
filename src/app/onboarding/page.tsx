@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from './onboarding.module.css';
+import { Landmark, Target, BarChart3 } from 'lucide-react';
 
 const STEPS = ['Introduction', 'Cadre Information', 'Prior Training', 'Career Goals'];
 
@@ -64,7 +65,7 @@ export default function OnboardingPage() {
     // Step 2 Validation (Prior Training)
     if (step === 2) {
       if (!data.completedCourses.trim()) {
-        setError('Please specify your completed iGOT / Online Courses (or type "None").');
+        setError('Please specify your completed  Online Courses (or type "None").');
         return;
       }
     }
@@ -98,7 +99,10 @@ export default function OnboardingPage() {
     <div className={styles.page}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <div className={styles.logo}>📊 StatPath AI</div>
+          <div className={styles.logo} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <BarChart3 size={22} color="#FF9933" />
+            <span>StatPath AI</span>
+          </div>
           <div className={styles.stepIndicator}>
             {STEPS.map((s, i) => (
               <div key={s} className={`${styles.step} ${i === step ? styles.active : ''} ${i < step ? styles.done : ''}`}>
@@ -127,7 +131,9 @@ export default function OnboardingPage() {
 
           {step === 0 && (
             <div className={styles.welcome}>
-              <div className={styles.welcomeEmoji}>🏛️</div>
+              <div className={styles.welcomeEmoji} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Landmark size={36} color="#003087" />
+              </div>
               <h1>Official Cadre Intake Portal</h1>
               <p>Welcome to the StatPath AI Baseline Intake. Completing this structured profile establishes your baseline competency framework mapped to official MoSPI role standards.</p>
               <div className={styles.welcomePoints}>
@@ -197,7 +203,9 @@ export default function OnboardingPage() {
                     className={`${styles.careerOption} ${data.careerGoal === role ? styles.careerSelected : ''}`}
                     onClick={() => setData({...data, careerGoal: role})}
                   >
-                    <span className={styles.careerIcon}>🎯</span>
+                    <span className={styles.careerIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Target size={18} color="#003087" />
+                    </span>
                     <span>{role}</span>
                     {data.careerGoal === role && <span className={styles.careerCheck}>✓</span>}
                   </button>

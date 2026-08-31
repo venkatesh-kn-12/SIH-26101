@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from '../auth.module.css';
 
+import { TrendingUp } from 'lucide-react';
 import { loginUser } from '@/lib/authStorage';
 
 export default function LoginPage() {
@@ -31,6 +32,7 @@ export default function LoginPage() {
     } else {
       setError(result.error || 'Authentication failed. Please check your credentials or register.');
       setLoading(false);
+      return;
     }
   };
 
@@ -39,7 +41,10 @@ export default function LoginPage() {
       <div className={styles.authLeft}>
         <Link href="/" className={styles.backLink}>← Back to Home</Link>
         <div className={styles.authBrand}>
-          <div className={styles.authLogo}>📈 StatPath AI</div>
+          <div className={styles.authLogo} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <TrendingUp size={24} color="#FF9933" />
+            <span>StatPath AI</span>
+          </div>
           <div className={styles.authTagline}>AI-Powered Competency Development</div>
           <div className={styles.authGovBadge}>Government of India | MoSPI</div>
         </div>
