@@ -40,6 +40,7 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [error, setError] = useState('');
+  const [educationOther, setEducationOther] = useState('');
   const [data, setData] = useState({
     experience: '',
     education: '',
@@ -60,12 +61,16 @@ export default function OnboardingPage() {
         setError('Please select your Highest Educational Qualification.');
         return;
       }
+      if (data.education === 'Other' && !educationOther.trim()) {
+        setError('Please specify your Educational Qualification in the text box provided.');
+        return;
+      }
     }
 
     // Step 2 Validation (Prior Training)
     if (step === 2) {
       if (!data.completedCourses.trim()) {
-        setError('Please specify your completed  Online Courses (or type "None").');
+        setError('Please specify your completed Online Courses (or type "None").');
         return;
       }
     }
@@ -79,7 +84,11 @@ export default function OnboardingPage() {
 
       // Save onboarding data to localStorage
       if (typeof window !== 'undefined') {
-        localStorage.setItem('statpath_onboarding_data', JSON.stringify(data));
+        const finalData = {
+          ...data,
+          education: data.education === 'Other' ? educationOther.trim() : data.education
+        };
+        localStorage.setItem('statpath_onboarding_data', JSON.stringify(finalData));
       }
       router.push('/onboarding/assessment');
       return;
@@ -168,6 +177,19 @@ export default function OnboardingPage() {
                   {QUALIFICATIONS.map(v => <option key={v}>{v}</option>)}
                 </select>
               </div>
+
+              {data.education === 'Other' && (
+                <div className="form-group" style={{ marginTop: 10 }}>
+                  <label className="form-label">Specify Educational Qualification <span style={{ color: '#C8102E' }}>*</span></label>
+                  <input 
+                    className="form-input" 
+                    placeholder="e.g. M.Stat / M.A. Econometrics / Post Graduate Diploma..." 
+                    value={educationOther} 
+                    onChange={e => setEducationOther(e.target.value)} 
+                    required 
+                  />
+                </div>
+              )}
             </div>
           )}
 
