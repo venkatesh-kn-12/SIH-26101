@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './dashboard.module.css';
@@ -7,6 +7,7 @@ import { NOTIFICATIONS } from '@/lib/mockData';
 import { useLanguage, SUPPORTED_LANGUAGES, Language } from '@/lib/LanguageContext';
 import { IndiaFlag } from '@/components/IndiaFlag';
 import { StatPathLogo } from '@/components/StatPathLogo';
+import { getCurrentUser, logoutUser, UserProfile } from '@/lib/authStorage';
 
 const NAV = [
   { href: '/dashboard', icon: '🏠', label: 'Overview' },
@@ -28,11 +29,21 @@ const MOBILE_BOTTOM_NAV = [
   { href: '/dashboard/profile', icon: '👤', label: 'Profile' },
 ];
 
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const { language, setLanguage, t } = useLanguage();
   const unread = NOTIFICATIONS.filter(n => !n.read).length;
+
+  useEffect(() => {
+    setCurrentUser(getCurrentUser());
+  }, []);
+
+  const userInitials = currentUser?.name
+    ? currentUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+    : 'PS';
 
   return (
     <div className={styles.layout}>
@@ -75,14 +86,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className={styles.sidebarFooter}>
           {sidebarOpen && (
             <div className={styles.userCard}>
-              <div className={styles.avatar}>PS</div>
+              <div className={styles.avatar}>{userInitials}</div>
               <div>
-                <div className={styles.userName}>Priya Sharma</div>
-                <div className={styles.userRole}>Statistical Officer</div>
+                <div className={styles.userName}>{currentUser?.name || 'Priya Sharma'}</div>
+                <div className={styles.userRole}>{currentUser?.designation || 'Statistical Officer'}</div>
               </div>
             </div>
           )}
-          <Link href="/" className={styles.logoutBtn}>
+          <Link href="/" className={styles.logoutBtn} onClick={() => logoutUser()}>
             <span>🚪</span>
             {sidebarOpen && <span>Logout</span>}
           </Link>

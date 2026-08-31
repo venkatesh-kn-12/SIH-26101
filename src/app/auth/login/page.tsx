@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from '../auth.module.css';
 
+import { loginUser } from '@/lib/authStorage';
+
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ empId: '', password: '', role: 'employee' });
@@ -14,12 +16,20 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    await new Promise(r => setTimeout(r, 1000));
-    if (form.empId && form.password) {
+    await new Promise(r => setTimeout(r, 600));
+
+    if (!form.empId || !form.password) {
+      setError('Please enter Employee ID and password.');
+      setLoading(false);
+      return;
+    }
+
+    const result = loginUser(form.empId, form.password, form.role);
+    if (result.success) {
       if (form.role === 'admin') router.push('/admin');
       else router.push('/dashboard');
     } else {
-      setError('Please enter Employee ID and password.');
+      setError(result.error || 'Authentication failed. Please check your credentials or register.');
       setLoading(false);
     }
   };

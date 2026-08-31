@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from '../auth.module.css';
+import { registerUser } from '@/lib/authStorage';
 
 const DEPARTMENTS = ['Price Statistics Division','Agricultural Statistics','National Accounts Division','Social Statistics Division','Industrial Statistics','Foreign Trade Statistics','IT Division','Economic Statistics','State Statistics Bureau'];
 const DESIGNATIONS = ['Statistical Officer','Senior Statistical Officer','Assistant Director','Deputy Director','Director','Additional Director General','Director General'];
@@ -13,10 +14,24 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name:'', empId:'', email:'', dept:'', designation:'', organisation:'Ministry of Statistics & Programme Implementation', rank:'Group A', password:'' });
 
+
   const next = () => { if (step < 2) setStep(step + 1); };
   const submit = async () => {
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
+    await new Promise(r => setTimeout(r, 800));
+    
+    registerUser({
+      name: form.name || 'Official User',
+      empId: form.empId || `MOS/2026/${Math.floor(1000 + Math.random() * 9000)}`,
+      email: form.email || 'user@mospi.gov.in',
+      dept: form.dept || 'Statistical Division',
+      designation: form.designation || 'Statistical Officer',
+      organisation: form.organisation || 'Ministry of Statistics & Programme Implementation',
+      rank: form.rank || 'Group A',
+      role: 'employee',
+      password: form.password || 'demo123'
+    });
+
     router.push('/onboarding');
   };
 

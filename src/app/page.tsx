@@ -64,7 +64,7 @@ export default function Home() {
               </p>
 
               <div className={styles.heroActions}>
-                <Link href="/auth/signup" className="btn btn-karnataka btn-lg">
+                <Link href="/auth/signup" className="btn btn-primary btn-lg">
                   {t('heroCtaPrimary')} →
                 </Link>
                 <Link href="#how-it-works" className="btn btn-secondary btn-lg">

@@ -150,7 +150,7 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
                   <Link href="/auth/login" className="btn btn-secondary btn-sm">
                     {t('navLogin')}
                   </Link>
-                  <Link href="/auth/signup" className="btn btn-karnataka btn-sm">
+                  <Link href="/auth/signup" className="btn btn-primary btn-sm">
                     {t('navRegister')}
                   </Link>
                 </div>

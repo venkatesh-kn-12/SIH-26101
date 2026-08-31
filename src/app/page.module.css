@@ -6,7 +6,7 @@
 
 /* Hero Section */
 .hero {
-  padding: 60px 0 80px 0;
+  padding: 44px 0 60px 0;
   background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
   border-bottom: 1px solid var(--gray-200);
   position: relative;
@@ -15,8 +15,8 @@
 
 .heroGrid {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 48px;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 36px;
   align-items: center;
 }
 

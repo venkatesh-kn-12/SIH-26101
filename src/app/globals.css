@@ -116,72 +116,80 @@ input, textarea, select { font-family: inherit; }
 ::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
 
 /* Utility classes */
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-.container-lg { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+.container { max-width: 1400px; margin: 0 auto; padding: 0 28px; }
+.container-lg { max-width: 1536px; margin: 0 auto; padding: 0 28px; }
 
 /* UX4G Official Button Standards & Class Mapping */
 .btn, .ux4g-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 18px;
-  border-radius: var(--border-radius);
-  font-weight: 600;
-  font-size: 13.5px;
-  line-height: 1.4;
-  transition: all 0.15s ease-in-out;
-  white-space: nowrap;
-  min-height: 38px;
-  border: 1px solid transparent;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 8px 18px !important;
+  border-radius: var(--border-radius) !important;
+  font-weight: 700 !important;
+  font-size: 13.5px !important;
+  line-height: 1.4 !important;
+  transition: all 0.2s ease-in-out !important;
+  white-space: nowrap !important;
+  min-height: 38px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
 }
 
 .btn-primary, .ux4g-btn-primary {
-  background: var(--ux4g-gov-navy);
+  background: linear-gradient(135deg, #003087 0%, #0A42A8 100%) !important;
   color: #FFFFFF !important;
-  border-color: var(--ux4g-gov-navy);
+  border: 1px solid #001F5C !important;
+  box-shadow: 0 2px 6px rgba(0, 48, 135, 0.25) !important;
 }
 .btn-primary:hover, .ux4g-btn-primary:hover {
-  background: var(--ux4g-gov-navy-dark);
-  border-color: var(--ux4g-gov-navy-dark);
-  box-shadow: var(--shadow-sm);
+  background: #001F5C !important;
+  border-color: #001540 !important;
+  box-shadow: 0 4px 10px rgba(0, 48, 135, 0.35) !important;
+  color: #FFFFFF !important;
 }
 
 .btn-karnataka {
-  background: var(--ux4g-red);
+  background: linear-gradient(135deg, #003087 0%, #C8102E 100%) !important;
   color: #FFFFFF !important;
-  border-color: var(--ux4g-red);
+  border: 1px solid #001F5C !important;
+  box-shadow: 0 2px 6px rgba(0, 48, 135, 0.25) !important;
 }
 .btn-karnataka:hover {
-  background: var(--ux4g-red-dark);
-  border-color: var(--ux4g-red-dark);
-  box-shadow: var(--shadow-sm);
+  background: #001F5C !important;
+  border-color: #001540 !important;
+  box-shadow: 0 4px 10px rgba(0, 48, 135, 0.35) !important;
+  color: #FFFFFF !important;
 }
 
 .btn-secondary, .ux4g-btn-secondary {
-  background: #FFFFFF;
-  color: var(--ux4g-gov-navy) !important;
-  border-color: var(--gray-300);
+  background: #FFFFFF !important;
+  color: #003087 !important;
+  border: 1.5px solid #003087 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
 }
 .btn-secondary:hover, .ux4g-btn-secondary:hover {
-  background: var(--gray-100);
-  border-color: var(--ux4g-gov-navy);
-  color: var(--ux4g-gov-navy-dark) !important;
+  background: #003087 !important;
+  border-color: #001F5C !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 3px 8px rgba(0, 48, 135, 0.2) !important;
 }
 
 .btn-accent, .ux4g-btn-accent {
-  background: var(--ux4g-saffron);
-  color: var(--gray-900) !important;
-  border-color: var(--ux4g-saffron-dark);
+  background: #FF9933 !important;
+  color: #0F172A !important;
+  border: 1px solid #D97706 !important;
+  font-weight: 800 !important;
 }
 .btn-accent:hover, .ux4g-btn-accent:hover {
-  background: var(--ux4g-saffron-dark);
+  background: #D97706 !important;
   color: #FFFFFF !important;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 6px rgba(217, 119, 6, 0.3) !important;
 }
 
-.btn-sm, .ux4g-btn-sm { padding: 5px 12px; font-size: 12.5px; min-height: 32px; }
-.btn-lg, .ux4g-btn-lg { padding: 12px 24px; font-size: 15px; min-height: 44px; }
+.btn-sm, .ux4g-btn-sm { padding: 6px 14px !important; font-size: 12.5px !important; min-height: 34px !important; }
+.btn-lg, .ux4g-btn-lg { padding: 12px 24px !important; font-size: 15px !important; min-height: 44px !important; }
 
 /* UX4G Standard Card */
 .card, .ux4g-card {
