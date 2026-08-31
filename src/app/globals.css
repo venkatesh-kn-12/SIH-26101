@@ -1,5 +1,5 @@
 @import 'ux4g-web-components/styles.css';
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
   /* UX4G Official Government of India Design System 3.0 Tokens */
@@ -138,7 +138,7 @@ input, textarea, select { font-family: inherit; }
 
 .btn-primary, .ux4g-btn-primary {
   background: var(--ux4g-gov-navy);
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   border-color: var(--ux4g-gov-navy);
 }
 .btn-primary:hover, .ux4g-btn-primary:hover {
@@ -149,7 +149,7 @@ input, textarea, select { font-family: inherit; }
 
 .btn-karnataka {
   background: var(--ux4g-red);
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   border-color: var(--ux4g-red);
 }
 .btn-karnataka:hover {
@@ -160,30 +160,30 @@ input, textarea, select { font-family: inherit; }
 
 .btn-secondary, .ux4g-btn-secondary {
   background: #FFFFFF;
-  color: var(--ux4g-gov-navy);
+  color: var(--ux4g-gov-navy) !important;
   border-color: var(--gray-300);
 }
 .btn-secondary:hover, .ux4g-btn-secondary:hover {
   background: var(--gray-100);
   border-color: var(--ux4g-gov-navy);
-  color: var(--ux4g-gov-navy-dark);
+  color: var(--ux4g-gov-navy-dark) !important;
 }
 
 .btn-accent, .ux4g-btn-accent {
   background: var(--ux4g-saffron);
-  color: var(--gray-900);
+  color: var(--gray-900) !important;
   border-color: var(--ux4g-saffron-dark);
 }
 .btn-accent:hover, .ux4g-btn-accent:hover {
   background: var(--ux4g-saffron-dark);
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   box-shadow: var(--shadow-sm);
 }
 
 .btn-sm, .ux4g-btn-sm { padding: 5px 12px; font-size: 12.5px; min-height: 32px; }
 .btn-lg, .ux4g-btn-lg { padding: 12px 24px; font-size: 15px; min-height: 44px; }
 
-/* UX4G Standard Card & Badge */
+/* UX4G Standard Card */
 .card, .ux4g-card {
   background: #FFFFFF;
   border-radius: var(--border-radius-lg);
@@ -196,23 +196,81 @@ input, textarea, select { font-family: inherit; }
   box-shadow: var(--shadow);
 }
 
-.badge, .ux4g-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 8px;
-  border-radius: var(--border-radius-sm);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1;
+/* HIGH-CONTRAST UX4G BADGES (COMPACT, HIGH-VISIBILITY & SLEEK) */
+.badge,
+span.badge,
+div.badge,
+[class*="badge"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 4px 11px !important;
+  border-radius: 14px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  margin-bottom: 10px !important;
 }
-.badge-primary, .ux4g-badge-primary { background: var(--info-bg); color: var(--info); border: 1px solid #BAE6FD; }
-.badge-karnataka { background: #FEE2E2; color: var(--ux4g-red); border: 1px solid #FECACA; }
-.badge-gold { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
-.badge-success, .ux4g-badge-success { background: var(--success-bg); color: var(--success); border: 1px solid #BBF7D0; }
-.badge-warning, .ux4g-badge-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid #FDE68A; }
-.badge-error, .ux4g-badge-error { background: var(--error-bg); color: var(--error); border: 1px solid #FECACA; }
-.badge-gray, .ux4g-badge-gray { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
+
+.badge-primary,
+span.badge-primary,
+.ux4g-badge-primary {
+  background-color: #003087 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #001F5C !important;
+}
+
+.badge-karnataka,
+span.badge-karnataka {
+  background-color: #C8102E !important;
+  color: #FFFFFF !important;
+  border: 1px solid #A00C24 !important;
+}
+
+.badge-gold,
+span.badge-gold {
+  background-color: #D97706 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #B45309 !important;
+}
+
+.badge-success,
+span.badge-success,
+.ux4g-badge-success {
+  background-color: #138808 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #0D6806 !important;
+}
+
+.badge-warning,
+span.badge-warning,
+.ux4g-badge-warning {
+  background-color: #D97706 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #B45309 !important;
+}
+
+.badge-error,
+span.badge-error,
+.ux4g-badge-error {
+  background-color: #C8102E !important;
+  color: #FFFFFF !important;
+  border: 1px solid #A00C24 !important;
+}
+
+.badge-gray,
+span.badge-gray,
+.ux4g-badge-gray {
+  background-color: #1E293B !important;
+  color: #FFFFFF !important;
+  border: 1px solid #0F172A !important;
+}
 
 /* Progress bar */
 .progress-bar {

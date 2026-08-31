@@ -24,14 +24,15 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #FFF5F5;
-  border: 1px solid rgba(200, 16, 46, 0.2);
-  color: var(--karnataka-red);
+  background: var(--ux4g-red);
+  border: 1px solid var(--ux4g-red-dark);
+  color: #FFFFFF !important;
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 13px;
   font-weight: 700;
   margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .karnatakaDot {
