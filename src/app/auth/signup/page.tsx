@@ -16,7 +16,8 @@ const DEPARTMENTS = [
   'Data Informatics & Innovation Division (DIID)',
   'Enterprise Survey Division (EnSD)',
   'Coordination & International Cooperation Division/Unit',
-  'NSO (FOD)'
+  'NSO (FOD)',
+  'Other'
 ];
 
 const DESIGNATIONS = [
@@ -36,6 +37,7 @@ export default function SignupPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [deptDropdownOpen, setDeptDropdownOpen] = useState(false);
   const [form, setForm] = useState({ name:'', empId:'', email:'', dept:'', designation:'', organisation:'Ministry of Statistics & Programme Implementation', password:'' });
 
   const next = () => { if (step < 2) setStep(step + 1); };
@@ -107,13 +109,62 @@ export default function SignupPage() {
                 <label className="form-label">Organisation</label>
                 <input className="form-input" value={form.organisation} onChange={e => setForm({...form, organisation: e.target.value})} />
               </div>
-              <div className="form-group">
+
+              {/* Scrollable Department / Division Dropdown */}
+              <div className="form-group" style={{ position: 'relative' }}>
                 <label className="form-label">Department / Division</label>
-                <select className="form-select" value={form.dept} onChange={e => setForm({...form, dept: e.target.value})}>
-                  <option value="">Select Division</option>
-                  {DEPARTMENTS.map(d => <option key={d}>{d}</option>)}
-                </select>
+                <div 
+                  className="form-select" 
+                  style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  onClick={() => setDeptDropdownOpen(!deptDropdownOpen)}
+                >
+                  <span style={{ color: form.dept ? '#0F172A' : '#64748B' }}>
+                    {form.dept || 'Select Division'}
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#64748B' }}>{deptDropdownOpen ? '▲' : '▼'}</span>
+                </div>
+                {deptDropdownOpen && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    zIndex: 100,
+                    background: '#FFFFFF',
+                    border: '1px solid var(--gray-300)',
+                    borderRadius: 'var(--border-radius)',
+                    maxHeight: '175px',
+                    overflowY: 'auto',
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+                    marginTop: '4px'
+                  }}>
+                    {DEPARTMENTS.map(d => (
+                      <div
+                        key={d}
+                        style={{
+                          padding: '9px 12px',
+                          fontSize: '13px',
+                          cursor: 'pointer',
+                          background: form.dept === d ? '#F1F5F9' : '#FFFFFF',
+                          color: form.dept === d ? '#003087' : '#1E293B',
+                          fontWeight: form.dept === d ? 700 : 500,
+                          borderBottom: '1px solid #F1F5F9',
+                          transition: 'background 0.15s'
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#F8FAFC'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = form.dept === d ? '#F1F5F9' : '#FFFFFF'; }}
+                        onClick={() => {
+                          setForm({ ...form, dept: d });
+                          setDeptDropdownOpen(false);
+                        }}
+                      >
+                        {d}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
+
               <div className="form-group">
                 <label className="form-label">Designation</label>
                 <select className="form-select" value={form.designation} onChange={e => setForm({...form, designation: e.target.value})}>
