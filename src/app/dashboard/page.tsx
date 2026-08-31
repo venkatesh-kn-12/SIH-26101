@@ -106,51 +106,6 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Assessment Diagnostics & AI Skill Recommendation Section */}
-      {assessmentData && (
-        <div className="card" style={{ marginBottom: 24, borderLeft: '4px solid var(--ux4g-gov-navy)', background: '#F8FAFC' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 10 }}>
-            <div>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0F172A', margin: 0 }}>
-                📋 Assessment Diagnostics & Section Accuracy
-              </h3>
-              <p style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
-                Evaluated from your baseline assessment ({assessmentData.correctCount} / {assessmentData.totalQuestions} correct)
-              </p>
-            </div>
-            <span className="badge badge-primary" style={{ fontSize: 12 }}>
-              Score: {assessmentData.score}% ({assessmentData.scoreFormatted})
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 14 }}>
-            {assessmentData.topicDetails?.map((tItem: any) => (
-              <div key={tItem.id} style={{
-                padding: '6px 12px',
-                borderRadius: 6,
-                fontSize: 12,
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                background: tItem.isCorrect ? '#DCFCE7' : tItem.isAnswered ? '#FEE2E2' : '#FEF3C7',
-                color: tItem.isCorrect ? '#15803D' : tItem.isAnswered ? '#991B1B' : '#92400E',
-                border: `1px solid ${tItem.isCorrect ? '#86EFAC' : tItem.isAnswered ? '#FCA5A5' : '#FDE68A'}`
-              }}>
-                <span>{tItem.isCorrect ? '✓' : tItem.isAnswered ? '✕' : '⚠️'}</span>
-                <span>{tItem.topic}: <strong>{tItem.status}</strong></span>
-              </div>
-            ))}
-          </div>
-
-          {assessmentData.weakTopics?.length > 0 && (
-            <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '10px 14px', borderRadius: 6, fontSize: 13, color: '#1E40AF' }}>
-              🤖 <strong>AI Learning Path Recommendation:</strong> Based on your response section data, immediate focus is recommended on <strong>{assessmentData.weakTopics.join(', ')}</strong> modules on iGOT Karmayogi.
-            </div>
-          )}
-        </div>
-      )}
-
       {/* Main Content Grid */}
       <div className={styles.mainGrid}>
         {/* Left Column */}

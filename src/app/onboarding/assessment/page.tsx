@@ -111,51 +111,15 @@ export default function AssessmentPage() {
           Your competency profile has been calculated and stored. StatPath AI has evaluated your response accuracy across key official statistical domains to generate your custom learning path.
         </p>
 
-        {/* Detailed Topic & Section Diagnostics */}
-        <div style={{ marginTop: 24, textAlign: 'left' }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12, color: '#0F172A' }}>Section & Topic Response Breakdown</h3>
-          <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 8, overflow: 'hidden' }}>
-            {assessmentSummary.topicDetails.map((tItem: any, idx: number) => (
-              <div key={tItem.id} style={{
-                padding: '12px 16px',
-                borderBottom: idx === total - 1 ? 'none' : '1px solid #E2E8F0',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                background: tItem.isCorrect ? '#F0FDF4' : tItem.isAnswered ? '#FEF2F2' : '#FFFBEB'
-              }}>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 14, color: '#0F172A' }}>
-                    Section: {tItem.topic} <span style={{ fontWeight: 400, color: '#64748B', fontSize: 12 }}>({tItem.competency})</span>
-                  </div>
-                  <div style={{ fontSize: 12, color: '#475569', marginTop: 2 }}>
-                    Q: {tItem.text}
-                  </div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <span className={`badge ${tItem.isCorrect ? 'badge-success' : tItem.isAnswered ? 'badge-error' : 'badge-warning'}`}>
-                    {tItem.status === 'Correct' ? '✓ Correct' : tItem.status === 'Incorrect' ? '✕ Incorrect' : '⚠️ Unanswered'}
-                  </span>
-                  <div style={{ fontSize: 11, marginTop: 4, fontWeight: 600, color: tItem.isCorrect ? '#166534' : '#991B1B' }}>
-                    {tItem.isCorrect ? 'Competency Verified' : 'Recommendation Gap'}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className={styles.resultStats} style={{ marginTop: 24 }}>
+          {[{label:'Correct', val: assessmentSummary.correctCount, color:'#22c55e'},
+            {label:'Incorrect', val: assessmentSummary.incorrectCount, color:'#ef4444'},
+            {label:'Unanswered', val: assessmentSummary.unansweredCount, color:'#f59e0b'},
+            {label:'Total Questions', val: assessmentSummary.totalQuestions, color:'#003087'},
+          ].map(s => (
+            <div key={s.label} className={styles.resStat}><span style={{ color: s.color, fontSize: 24, fontWeight: 800 }}>{s.val}</span><span>{s.label}</span></div>
+          ))}
         </div>
-
-        {/* AI Recommendations Callout */}
-        {assessmentSummary.weakTopics.length > 0 && (
-          <div style={{ marginTop: 20, background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 8, padding: 16, textAlign: 'left' }}>
-            <div style={{ fontWeight: 700, color: '#1E40AF', fontSize: 14, marginBottom: 6 }}>
-              🤖 AI Learning Path Recommendation System:
-            </div>
-            <p style={{ fontSize: 13, color: '#1E3A8A', margin: 0 }}>
-              Based on your missed/unanswered sections ({assessmentSummary.weakTopics.join(', ')}), StatPath AI will prioritize courses in <strong>{assessmentSummary.weakTopics[0]}</strong> to quickly raise your overall competency score.
-            </p>
-          </div>
-        )}
 
         <button className="btn btn-primary btn-lg" onClick={() => router.push('/dashboard')} style={{ width: '100%', marginTop: 24 }}>
           View My Competency Profile & Learning Path →

@@ -134,7 +134,7 @@ export default function ProfilePage() {
               <div className={styles.historyRow}>
                 <div className={styles.historyInfo}>
                   <div className={styles.historyName}>{onboarding.completedCourses}</div>
-                  <div className={styles.historyMeta}>Self-Reported Training • Karmayogi Portal</div>
+                  <div className={styles.historyMeta}>Self-Reported Training</div>
                 </div>
                 <span className="badge badge-success">Completed</span>
               </div>
