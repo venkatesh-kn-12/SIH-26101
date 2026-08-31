@@ -5,15 +5,38 @@ import { useRouter } from 'next/navigation';
 import styles from '../auth.module.css';
 import { registerUser } from '@/lib/authStorage';
 
-const DEPARTMENTS = ['Price Statistics Division','Agricultural Statistics','National Accounts Division','Social Statistics Division','Industrial Statistics','Foreign Trade Statistics','IT Division','Economic Statistics','State Statistics Bureau'];
-const DESIGNATIONS = ['Statistical Officer','Senior Statistical Officer','Assistant Director','Deputy Director','Director','Additional Director General','Director General'];
+const DEPARTMENTS = [
+  'Economics Statistics Division (ESD)',
+  'National Accounts Division (NAD)',
+  'Administrative Statistics & Policy Division (ASPD)',
+  'Household Survey Division (HSD)',
+  'Coordination and Quality Control Division (CQCD)',
+  'Capacity Development Division (CDD)',
+  'Price Statistics Division (PSD)',
+  'Data Informatics & Innovation Division (DIID)',
+  'Enterprise Survey Division (EnSD)',
+  'Coordination & International Cooperation Division/Unit',
+  'NSO (FOD)'
+];
+
+const DESIGNATIONS = [
+  'Junior Statistical Officer',
+  'Statistical Officer',
+  'Senior Statistical Officer',
+  'Assistant Director',
+  'Deputy Director',
+  'Joint Director',
+  'Director',
+  'Deputy Director General',
+  'Additional Director General',
+  'Other'
+];
 
 export default function SignupPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ name:'', empId:'', email:'', dept:'', designation:'', organisation:'Ministry of Statistics & Programme Implementation', rank:'Group A', password:'' });
-
+  const [form, setForm] = useState({ name:'', empId:'', email:'', dept:'', designation:'', organisation:'Ministry of Statistics & Programme Implementation', password:'' });
 
   const next = () => { if (step < 2) setStep(step + 1); };
   const submit = async () => {
@@ -24,10 +47,10 @@ export default function SignupPage() {
       name: form.name || 'Official User',
       empId: form.empId || `MOS/2026/${Math.floor(1000 + Math.random() * 9000)}`,
       email: form.email || 'user@mospi.gov.in',
-      dept: form.dept || 'Statistical Division',
+      dept: form.dept || 'Economics Statistics Division (ESD)',
       designation: form.designation || 'Statistical Officer',
       organisation: form.organisation || 'Ministry of Statistics & Programme Implementation',
-      rank: form.rank || 'Group A',
+      rank: 'Group A',
       role: 'employee',
       password: form.password || 'demo123'
     });
@@ -87,7 +110,7 @@ export default function SignupPage() {
               <div className="form-group">
                 <label className="form-label">Department / Division</label>
                 <select className="form-select" value={form.dept} onChange={e => setForm({...form, dept: e.target.value})}>
-                  <option value="">Select Department</option>
+                  <option value="">Select Division</option>
                   {DEPARTMENTS.map(d => <option key={d}>{d}</option>)}
                 </select>
               </div>
@@ -98,13 +121,7 @@ export default function SignupPage() {
                   {DESIGNATIONS.map(d => <option key={d}>{d}</option>)}
                 </select>
               </div>
-              <div className="form-group">
-                <label className="form-label">Pay Level / Rank</label>
-                <select className="form-select" value={form.rank} onChange={e => setForm({...form, rank: e.target.value})}>
-                  <option>Group A</option><option>Group B (Gazetted)</option><option>Group B (Non-Gazetted)</option><option>Group C</option>
-                </select>
-              </div>
-              <div style={{display:'flex',gap:12}}>
+              <div style={{display:'flex',gap:12,marginTop:20}}>
                 <button className="btn btn-secondary" style={{flex:1}} onClick={() => setStep(1)}>← Back</button>
                 <button className="btn btn-primary" style={{flex:2}} onClick={submit} disabled={loading}>
                   {loading ? 'Creating Account...' : 'Create Account & Start Onboarding'}
