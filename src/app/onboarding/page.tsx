@@ -217,22 +217,15 @@ export default function OnboardingPage() {
             <div>
               <h2 className={styles.stepTitle}>Career Progression Targets</h2>
               <p className={styles.stepSubtitle}>Select your target career role to benchmark advanced competency requirements (Mandatory).</p>
-              <div className={styles.careerGrid}>
-                {CAREER_ROLES.map(role => (
-                  <button
-                    key={role}
-                    type="button"
-                    className={`${styles.careerOption} ${data.careerGoal === role ? styles.careerSelected : ''}`}
-                    onClick={() => setData({ ...data, careerGoal: role })}
-                  >
-                    <span className={styles.careerIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Target size={18} color="#003087" />
-                    </span>
-                    <span>{role}</span>
-                    {data.careerGoal === role && <span className={styles.careerCheck}>✓</span>}
-                  </button>
-                ))}
+
+              <div className="form-group">
+                <label className="form-label">Target Career Role <span style={{ color: '#C8102E' }}>*</span></label>
+                <select className="form-select" value={data.careerGoal} onChange={e => setData({ ...data, careerGoal: e.target.value })} required>
+                  <option value="">Select Target Role</option>
+                  {CAREER_ROLES.map(v => <option key={v}>{v}</option>)}
+                </select>
               </div>
+
               {data.careerGoal && (
                 <div className={styles.careerConfirm}>
                   Your custom learning path will be configured for <strong>{data.careerGoal}</strong>.
