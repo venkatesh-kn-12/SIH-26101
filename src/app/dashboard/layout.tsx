@@ -3,12 +3,12 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './dashboard.module.css';
-import { NOTIFICATIONS } from '@/lib/mockData';
 import { useLanguage, SUPPORTED_LANGUAGES, Language } from '@/lib/LanguageContext';
 import { IndiaFlag } from '@/components/IndiaFlag';
 import { StatPathLogo } from '@/components/StatPathLogo';
 import { getCurrentUser, logoutUser, UserProfile } from '@/lib/authStorage';
-import { Home, User, BarChart3, BookOpen, Zap, FileText, Target, Bot, Bell, LogOut, Globe } from 'lucide-react';
+import { getNotifications, AppNotification } from '@/lib/notificationStorage';
+import { Home, User, BarChart3, BookOpen, Zap, FileText, Target, Bell, LogOut, Globe } from 'lucide-react';
 
 const NAV = [
   { href: '/dashboard', icon: <Home size={18} />, label: 'Overview' },
@@ -18,7 +18,6 @@ const NAV = [
   { href: '/dashboard/daily', icon: <Zap size={18} />, label: 'Daily Learning' },
   { href: '/dashboard/assess', icon: <FileText size={18} />, label: 'Assessments' },
   { href: '/dashboard/career', icon: <Target size={18} />, label: 'Career Simulator' },
-  { href: '/dashboard/studio', icon: <Bot size={18} />, label: 'AI Knowledge Studio' },
   { href: '/dashboard/notifications', icon: <Bell size={18} />, label: 'Notifications' },
 ];
 
@@ -34,16 +33,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const { language, setLanguage } = useLanguage();
-  const unread = NOTIFICATIONS.filter(n => !n.read).length;
 
   useEffect(() => {
     setCurrentUser(getCurrentUser());
+
+    const loadNotifs = () => setNotifications(getNotifications());
+    loadNotifs();
+
+    window.addEventListener('statpath_notifications_updated', loadNotifs);
+    return () => window.removeEventListener('statpath_notifications_updated', loadNotifs);
   }, []);
+
+  const unread = notifications.filter(n => !n.read).length;
 
   const userInitials = currentUser?.name
     ? currentUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
-    : 'PS';
+    : 'U';
 
   return (
     <div className={styles.layout}>
@@ -93,8 +100,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className={styles.userProfile}>
               <div className={styles.userAvatar}>{userInitials}</div>
               <div>
-                <div className={styles.userName}>{currentUser?.name || 'Priya Sharma'}</div>
-                <div className={styles.userRole}>{currentUser?.designation || 'Statistical Officer'}</div>
+                <div className={styles.userName}>{currentUser?.name || 'Registered Officer'}</div>
+                <div className={styles.userRole}>{currentUser?.designation || 'Statistical Official'}</div>
               </div>
             </div>
           )}
