@@ -1,0 +1,55 @@
+.layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+.mainCol { }
+.sideCol { display: flex; flex-direction: column; gap: 16px; }
+.byteCard { padding: 28px; background: linear-gradient(135deg, #003087, #1a4aa8); color: white; }
+.byteTop { display: flex; justify-content: space-between; margin-bottom: 12px; }
+.byteLabel { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; }
+.byteTime { font-size: 13px; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 12px; }
+.byteConcept { font-size: 26px; font-weight: 900; margin-bottom: 8px; }
+.byteCompetency { font-size: 12px; opacity: 0.7; margin-bottom: 16px; }
+.byteDesc { font-size: 14px; line-height: 1.7; opacity: 0.85; margin-bottom: 20px; }
+.byteSteps { display: flex; gap: 0; }
+.byteStep { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; font-size: 11px; opacity: 0.7; }
+.stepNum { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; }
+.learnCard, .quizCard { padding: 24px; }
+.lessonHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.lessonStep { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+.lessonTitle { font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 20px; }
+.lessonContent { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+.lessonContent p { font-size: 15px; line-height: 1.7; color: #334155; }
+.exampleBox { background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 16px; }
+.exampleTitle { font-size: 13px; font-weight: 700; color: #1e40af; margin-bottom: 8px; }
+.exampleBox p { font-size: 14px; color: #1e40af; }
+.visualBox { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; }
+.visualTitle { font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 12px; }
+.strataDiagram { display: flex; flex-direction: column; gap: 8px; }
+.strata { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #475569; }
+.strataBar { height: 20px; background: #003087; border-radius: 4px; opacity: 0.7; }
+.quizQ { font-size: 16px; font-weight: 700; color: #0f172a; margin: 12px 0 20px; line-height: 1.5; }
+.quizOptions { display: flex; flex-direction: column; gap: 10px; }
+.quizOpt { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 14px; color: #334155; background: white; text-align: left; transition: all 0.2s; }
+.quizSel { border-color: #003087; background: #f0f7ff; color: #003087; }
+.quizCorrect { border-color: #22c55e !important; background: #dcfce7 !important; color: #166534; }
+.quizWrong { border-color: #ef4444 !important; background: #fee2e2 !important; }
+.doneCard { padding: 40px; text-align: center; }
+.doneCard h2 { font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 12px; }
+.doneStats { display: flex; gap: 24px; justify-content: center; margin-top: 20px; }
+.doneStat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.doneVal { font-size: 22px; font-weight: 900; color: #003087; }
+.doneStat span:last-child { font-size: 12px; color: #64748b; }
+.sideCard { padding: 16px; }
+.sideTitle { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+.sideDesc { font-size: 12px; color: #64748b; margin-bottom: 12px; }
+.retentionRow { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+.retentionRow:last-child { border-bottom: none; }
+.retInfo { display: flex; flex-direction: column; gap: 2px; }
+.retConcept { font-size: 13px; font-weight: 600; color: #1e293b; }
+.retDays { font-size: 11px; color: #94a3b8; }
+.weekGrid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin-bottom: 12px; }
+.weekDay { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; color: #94a3b8; }
+.weekDot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid #e2e8f0; }
+.weekDone .weekDot { background: #22c55e; border-color: #22c55e; color: white; }
+.weekToday .weekDot { border-color: #003087; color: #003087; font-weight: 700; }
+.weekDone { color: #334155; }
+.weekToday { color: #003087; font-weight: 700; }
+.streakInfo { font-size: 13px; color: #64748b; text-align: center; }

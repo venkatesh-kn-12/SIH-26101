@@ -1,0 +1,312 @@
+.headerContainer {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: white;
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+.topGovBar {
+  background: var(--ux4g-gov-navy-dark);
+  color: white;
+  padding: 6px 0;
+  font-size: 12px;
+  border-bottom: 3px solid var(--ux4g-saffron);
+}
+
+.topBarContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.govIdentity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.karnatakaFlagBadge {
+  display: flex;
+  width: 24px;
+  height: 14px;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+.flagRed {
+  flex: 1;
+  background: var(--karnataka-red);
+}
+
+.flagYellow {
+  flex: 1;
+  background: var(--karnataka-yellow);
+}
+
+.govTitleText {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.accessibilityBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.accBtn {
+  color: #E2E8F0;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.accBtn:hover, .activeAcc {
+  background: var(--karnataka-gold);
+  color: var(--gray-900);
+}
+
+.langBtn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--karnataka-gold);
+  color: white;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.langBtn:hover {
+  background: var(--karnataka-gold);
+  color: var(--gray-900);
+}
+
+.mainNav {
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.navRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+
+.logoGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoBadge {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--gov-primary) 0%, var(--karnataka-red) 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 48, 135, 0.2);
+}
+
+.logoEmblem {
+  font-size: 22px;
+}
+
+.logoTextGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brandTitle {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--gov-primary);
+  letter-spacing: -0.02em;
+}
+
+.govTag {
+  font-size: 10px;
+  font-weight: 800;
+  background: var(--karnataka-gold);
+  color: var(--gray-900);
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.brandTagline {
+  font-size: 11px;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+.desktopNav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navLink {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--gray-700);
+  padding: 8px 4px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.navLink:hover, .navLink.active {
+  color: var(--karnataka-red);
+  border-bottom-color: var(--karnataka-red);
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.authButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconBtn {
+  position: relative;
+  font-size: 18px;
+  padding: 6px;
+  border-radius: 50%;
+  background: var(--gray-100);
+}
+
+.notifBadge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--karnataka-red);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userProfileBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 20px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background: var(--gov-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.userInfoHideMobile {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.userRole {
+  font-size: 10px;
+  color: var(--gray-500);
+}
+
+.hamburgerBtn {
+  display: none;
+  font-size: 24px;
+  padding: 6px 10px;
+  color: var(--gray-800);
+}
+
+.mobileDrawer {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-top: 1px solid var(--gray-200);
+  padding: 16px;
+  gap: 12px;
+}
+
+.mobileLink {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gray-800);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.mobileAuthRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+@media (max-width: 1024px) {
+  .desktopNav {
+    display: none;
+  }
+  .hamburgerBtn {
+    display: block;
+  }
+  .userInfoHideMobile {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .brandTagline {
+    display: none;
+  }
+  .govTitleText {
+    font-size: 10px;
+  }
+}

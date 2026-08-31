@@ -1,0 +1,28 @@
+.pageHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.title { font-size: 22px; font-weight: 800; color: #0f172a; }
+.subtitle { font-size: 13px; color: #64748b; margin-top: 4px; max-width: 600px; line-height: 1.6; }
+.lastUpdated { font-size: 12px; color: #94a3b8; background: #f8fafc; padding: 6px 12px; border-radius: 6px; border: 1px solid #e2e8f0; white-space: nowrap; }
+.bands { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.band { padding: 16px; }
+.bandHeader { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; font-weight: 700; }
+.bandLabel { font-size: 13px; font-weight: 700; }
+.bandCount { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
+.bandItems { display: flex; flex-direction: column; gap: 4px; }
+.bandItem { font-size: 12px; color: #64748b; }
+.twoCol { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.section { padding: 20px; }
+.timelineNote { font-size: 13px; color: #64748b; margin-top: 8px; }
+.catSection { margin-bottom: 24px; }
+.catTitle { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 12px; }
+.compGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.compCard { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; }
+.compHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.compName { font-size: 13px; font-weight: 600; color: #1e293b; }
+.compGap { font-size: 11px; font-weight: 700; }
+.compScores { display: flex; justify-content: space-between; font-size: 12px; color: #64748b; margin-bottom: 8px; }
+.compBarWrap { position: relative; }
+.compBarBg { height: 8px; background: #e2e8f0; border-radius: 4px; position: relative; overflow: visible; }
+.compBarFill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 4px; }
+.compBarReq { position: absolute; top: -4px; width: 2px; height: 16px; background: #334155; }
+.actions { display: flex; gap: 12px; margin-top: 20px; }
+@media (max-width: 1024px) { .bands { grid-template-columns: repeat(2, 1fr); } .twoCol { grid-template-columns: 1fr; } .compGrid { grid-template-columns: repeat(2, 1fr); } }

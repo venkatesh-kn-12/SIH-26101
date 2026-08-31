@@ -1,0 +1,37 @@
+.page { min-height: 100vh; background: linear-gradient(135deg, #001f5c 0%, #003087 100%); display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+.container { max-width: 760px; width: 100%; }
+.header { text-align: center; margin-bottom: 32px; }
+.logo { font-size: 24px; font-weight: 900; color: white; margin-bottom: 24px; }
+.stepIndicator { display: flex; align-items: center; justify-content: center; gap: 0; }
+.step { display: flex; align-items: center; }
+.stepCircle { width: 32px; height: 32px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+.step.active .stepCircle { border-color: #F0C040; color: #F0C040; background: rgba(240,192,64,0.15); }
+.step.done .stepCircle { background: #22c55e; border-color: #22c55e; color: white; }
+.stepLabel { font-size: 11px; color: rgba(255,255,255,0.5); margin: 0 4px; white-space: nowrap; }
+.step.active .stepLabel { color: white; }
+.card { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.welcome { text-align: center; }
+.welcomeEmoji { font-size: 56px; margin-bottom: 16px; }
+.welcome h1 { font-size: 26px; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
+.welcome p { font-size: 15px; color: #64748b; line-height: 1.7; margin-bottom: 28px; }
+.welcomePoints { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.point { display: flex; gap: 12px; font-size: 14px; color: #334155; }
+.point span:first-child { color: #22c55e; font-weight: 700; flex-shrink: 0; }
+.stepTitle { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+.stepSubtitle { font-size: 14px; color: #64748b; margin-bottom: 24px; }
+.infoBox { background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #92400e; margin-bottom: 20px; line-height: 1.6; }
+.skillGrid { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
+.skillRow { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #f8fafc; border-radius: 8px; }
+.skillName { font-size: 13px; font-weight: 500; color: #334155; }
+.skillRating { display: flex; gap: 4px; }
+.ratingBtn { width: 28px; height: 28px; border-radius: 6px; border: 1.5px solid #e2e8f0; background: white; font-size: 12px; font-weight: 700; color: #94a3b8; cursor: pointer; transition: all 0.15s; }
+.ratingBtn:hover { border-color: #003087; color: #003087; }
+.ratingActive { background: #003087 !important; border-color: #003087 !important; color: white !important; }
+.careerGrid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.careerOption { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; font-size: 14px; color: #334155; text-align: left; transition: all 0.2s; }
+.careerOption:hover { border-color: #003087; }
+.careerSelected { border-color: #003087 !important; background: #f0f7ff !important; color: #003087; font-weight: 600; }
+.careerIcon { font-size: 20px; }
+.careerCheck { margin-left: auto; color: #003087; font-weight: 900; font-size: 16px; }
+.careerConfirm { background: #dcfce7; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #166534; line-height: 1.6; }
+.navButtons { display: flex; margin-top: 28px; padding-top: 24px; border-top: 1px solid #f1f5f9; }

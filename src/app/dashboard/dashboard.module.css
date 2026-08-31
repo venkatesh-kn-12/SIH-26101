@@ -1,0 +1,155 @@
+.layout { display: flex; height: 100vh; overflow: hidden; background: var(--gray-50); }
+
+/* Sidebar */
+.sidebar {
+  background: var(--gov-primary-dark);
+  border-right: 2px solid var(--karnataka-gold);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  flex-shrink: 0;
+  overflow: hidden;
+  z-index: 100;
+}
+.sidebarOpen { width: 250px; }
+.sidebarCollapsed { width: 64px; }
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  min-height: 64px;
+}
+.sidebarLogo { display: flex; align-items: center; gap: 10px; color: white; overflow: hidden; }
+.logoBadge { font-size: 22px; }
+.logoName { font-size: 16px; font-weight: 800; white-space: nowrap; color: white; }
+.logoDept { font-size: 9.5px; color: var(--karnataka-gold); white-space: nowrap; }
+.toggleBtn {
+  width: 28px; height: 28px;
+  background: rgba(255,255,255,0.1);
+  border: none; border-radius: 6px;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer; font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.toggleBtn:hover { background: rgba(255,255,255,0.2); }
+
+.sidebarNav { flex: 1; padding: 12px 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+.navItem {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--border-radius);
+  color: rgba(255,255,255,0.75);
+  font-size: 13px; font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+}
+.navItem:hover { background: rgba(255,255,255,0.1); color: white; }
+.navActive { background: rgba(255,255,255,0.18); color: white; font-weight: 700; }
+.navActive::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 4px; background: var(--karnataka-gold); border-radius: 0 4px 4px 0; }
+.navIcon { font-size: 18px; flex-shrink: 0; width: 24px; text-align: center; }
+.navLabel { display: flex; align-items: center; gap: 6px; flex: 1; }
+.badge { background: var(--karnataka-red); color: white; border-radius: 10px; padding: 1px 6px; font-size: 10px; font-weight: 800; }
+
+.sidebarFooter { border-top: 1px solid rgba(255,255,255,0.1); padding: 12px 8px; display: flex; flex-direction: column; gap: 8px; }
+.userCard { display: flex; align-items: center; gap: 10px; padding: 8px; }
+.avatar { width: 36px; height: 36px; background: var(--karnataka-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+.userName { font-size: 13px; font-weight: 700; color: white; white-space: nowrap; }
+.userRole { font-size: 11px; color: rgba(255,255,255,0.6); white-space: nowrap; }
+.logoutBtn { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; color: rgba(255,255,255,0.6); font-size: 13px; cursor: pointer; }
+.logoutBtn:hover { background: rgba(200,16,46,0.2); color: #FCA5A5; }
+
+/* Main area */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+.topBar {
+  height: 56px;
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+.topBarLeft { display: flex; align-items: center; gap: 16px; }
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray-600); }
+.sep { opacity: 0.4; }
+.topBarRight { display: flex; align-items: center; gap: 14px; }
+.langToggleBtn {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray-800);
+}
+.govFlag { font-size: 11px; font-weight: 600; color: var(--gov-primary); background: #EFF6FF; padding: 4px 10px; border-radius: 20px; border: 1px solid #BFDBFE; }
+.notifBtn { position: relative; font-size: 18px; cursor: pointer; }
+.notifDot { position: absolute; top: -4px; right: -6px; background: var(--karnataka-red); color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+
+.content { flex: 1; overflow-y: auto; padding: 28px; padding-bottom: 80px; }
+
+/* Mobile Bottom Navigation */
+.mobileBottomNav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: white;
+  border-top: 2px solid var(--karnataka-gold);
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+  z-index: 1000;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.mobileNavItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--gray-600);
+  padding: 6px 12px;
+  border-radius: 8px;
+  flex: 1;
+}
+
+.mobileNavIcon {
+  font-size: 20px;
+}
+
+.mobileNavLabel {
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mobileNavActive {
+  color: var(--karnataka-red);
+}
+
+.mobileNavActive .mobileNavIcon {
+  transform: scale(1.15);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+  .mobileBottomNav {
+    display: flex;
+  }
+  .content {
+    padding: 16px;
+    padding-bottom: 80px;
+  }
+}

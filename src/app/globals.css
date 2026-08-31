@@ -1,0 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* UX4G Official Government of India Design System 3.0 Tokens */
+  --ux4g-brand-purple: #5C2483;
+  --ux4g-brand-purple-dark: #3A1958;
+  --ux4g-gov-navy: #003087;
+  --ux4g-gov-navy-dark: #001F5C;
+  --ux4g-saffron: #FF9933;
+  --ux4g-saffron-dark: #E06A00;
+  --ux4g-green: #138808;
+  --ux4g-green-dark: #0D6806;
+
+  /* Primary Theme Maps (UX4G Standard) */
+  --gov-primary: var(--ux4g-gov-navy);
+  --gov-primary-dark: var(--ux4g-gov-navy-dark);
+  --gov-primary-light: #1A4AA8;
+  
+  /* National Identity Accents (UX4G Compliant) */
+  --gov-accent-saffron: var(--ux4g-saffron);
+  --gov-accent-saffron-dark: var(--ux4g-saffron-dark);
+  --gov-accent-green: var(--ux4g-green);
+  --karnataka-red: #C8102E;
+  --karnataka-gold: var(--ux4g-saffron);
+  
+  /* UX4G Functional Grayscale */
+  --gray-50: #F8FAFC;
+  --gray-100: #F1F5F9;
+  --gray-200: #E2E8F0;
+  --gray-300: #CBD5E1;
+  --gray-400: #94A3B8;
+  --gray-500: #64748B;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1E293B;
+  --gray-900: #0F172A;
+
+  /* UX4G Semantic Tokens */
+  --success: var(--ux4g-green);
+  --success-bg: #DCFCE7;
+  --warning: #D97706;
+  --warning-bg: #FEF3C7;
+  --error: #DC2626;
+  --error-bg: #FEE2E2;
+  --info: #0284C7;
+  --info-bg: #E0F2FE;
+
+  /* Skill Level Colors */
+  --skill-beginner: #EF4444;
+  --skill-basic: #F97316;
+  --skill-intermediate: #EAB308;
+  --skill-advanced: #22C55E;
+  --skill-expert: #0284C7;
+
+  /* UX4G Component Tokens */
+  --sidebar-width: 260px;
+  --header-height: 64px;
+  --border-radius-sm: 6px;
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* High Contrast Mode Overrides */
+[data-contrast="high"] {
+  --gray-50: #FFFFFF;
+  --gray-100: #F0F0F0;
+  --gray-200: #000000;
+  --gray-800: #000000;
+  --gray-900: #000000;
+  --gov-primary: #001F5C;
+  --karnataka-red: #800000;
+}
+
+/* Font Size Scaling */
+[data-fontsize="large"] { font-size: 16px !important; }
+[data-fontsize="xlarge"] { font-size: 18px !important; }
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', 'Noto Sans Kannada', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  color: var(--gray-800);
+  background: var(--gray-50);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+
+/* Focus indicator for keyboard navigation accessibility */
+*:focus-visible {
+  outline: 3px solid var(--karnataka-gold) !important;
+  outline-offset: 2px !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--gray-100); }
+::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+
+/* Utility classes */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.container-lg { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+/* Signature Competency Journey Line */
+.competency-journey-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.15;
+}
+
+/* Button base styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-height: 40px;
+}
+.btn-primary {
+  background: var(--gov-primary);
+  color: white;
+}
+.btn-primary:hover { background: var(--gov-primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+.btn-karnataka {
+  background: var(--karnataka-red);
+  color: white;
+}
+.btn-karnataka:hover { background: var(--karnataka-red-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+.btn-secondary {
+  background: white;
+  color: var(--gov-primary);
+  border: 1.5px solid var(--gray-300);
+}
+.btn-secondary:hover { background: var(--gray-100); border-color: var(--gov-primary); }
+
+.btn-accent {
+  background: var(--karnataka-gold);
+  color: var(--gray-900);
+}
+.btn-accent:hover { background: var(--karnataka-yellow); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+.btn-sm { padding: 6px 14px; font-size: 13px; min-height: 34px; }
+.btn-lg { padding: 14px 28px; font-size: 16px; min-height: 48px; }
+
+/* Card */
+.card {
+  background: white;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  box-shadow: var(--shadow);
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-primary { background: var(--info-bg); color: var(--info); }
+.badge-karnataka { background: #FEE2E2; color: var(--karnataka-red); border: 1px solid rgba(200, 16, 46, 0.2); }
+.badge-gold { background: #FEF3C7; color: #92400E; border: 1px solid rgba(247, 184, 1, 0.4); }
+.badge-success { background: var(--success-bg); color: var(--success); }
+.badge-warning { background: var(--warning-bg); color: var(--warning); }
+.badge-error { background: var(--error-bg); color: var(--error); }
+.badge-gray { background: var(--gray-100); color: var(--gray-600); }
+
+/* Progress bar */
+.progress-bar {
+  height: 8px;
+  background: var(--gray-200);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--gov-primary);
+  transition: width 0.6s ease;
+}
+
+/* Form elements */
+.form-group { margin-bottom: 20px; }
+.form-label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--gray-700);
+  margin-bottom: 6px;
+}
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  color: var(--gray-800);
+  background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--gov-primary);
+  box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.1);
+}
+.form-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  color: var(--gray-800);
+  background: white;
+  transition: border-color 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.fade-in { animation: fadeIn 0.3s ease forwards; }
+.slide-in { animation: slideIn 0.3s ease forwards; }
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--gray-200);
+  border-top-color: var(--gov-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container, .container-lg { padding: 0 16px; }
+  .btn-lg { padding: 12px 20px; font-size: 15px; }
+}

@@ -1,0 +1,69 @@
+.page { max-width: 1200px; }
+
+.welcome { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.welcomeTitle { font-size: 24px; font-weight: 800; color: #0f172a; }
+.welcomeSub { font-size: 13px; color: #64748b; margin-top: 4px; }
+.welcomeMeta { display: flex; align-items: center; gap: 12px; }
+.lastLogin { font-size: 12px; color: #94a3b8; }
+
+.kpiGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.kpiCard { display: flex; align-items: center; gap: 16px; padding: 20px; }
+.kpiIcon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.kpiVal { font-size: 22px; font-weight: 800; }
+.kpiLabel { font-size: 12px; font-weight: 600; color: #64748b; margin-top: 2px; }
+.kpiSub { font-size: 11px; color: #94a3b8; }
+
+.mainGrid { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+.leftCol { display: flex; flex-direction: column; gap: 20px; }
+.rightCol { display: flex; flex-direction: column; gap: 16px; }
+
+.section { padding: 20px; }
+
+/* Radar */
+.radarLegend { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748b; margin-top: 4px; }
+.legendDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+/* Gaps */
+.gapRow { margin-bottom: 16px; }
+.gapInfo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.gapName { font-size: 13px; font-weight: 600; color: #1e293b; }
+.gapBar { position: relative; }
+.gapBarInner { height: 8px; background: #f1f5f9; border-radius: 4px; overflow: visible; position: relative; }
+.gapCurrent { position: absolute; left: 0; top: 0; height: 100%; background: #003087; border-radius: 4px; }
+.gapRequired { position: absolute; top: -4px; width: 2px; height: 16px; background: #dc2626; }
+.gapVals { display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+/* Daily Byte */
+.dailyByte { background: linear-gradient(135deg, #003087, #1a4aa8); color: white; }
+.byteHeader { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 12px; opacity: 0.8; }
+.byteDate { opacity: 0.6; }
+.byteConcept { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+.byteExp { font-size: 13px; line-height: 1.6; opacity: 0.85; }
+
+/* Progress Courses */
+.progressCourse { margin-bottom: 16px; }
+.progressCourse:last-child { margin-bottom: 0; }
+.pcHeader { display: flex; align-items: center; justify-content: space-between; }
+.pcName { font-size: 13px; font-weight: 600; color: #1e293b; }
+.pcPct { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+/* Notifications */
+.notifRow { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+.notifRow:last-child { border-bottom: none; }
+.notifUnread { background: #f0f7ff; margin: 0 -20px; padding: 10px 20px; }
+.notifIcon { font-size: 18px; flex-shrink: 0; }
+.notifTitle { font-size: 13px; font-weight: 600; color: #1e293b; }
+.notifMsg { font-size: 12px; color: #64748b; line-height: 1.5; margin-top: 2px; }
+
+/* Career */
+.careerCard { border: 2px solid #dcfce7; }
+.careerHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.careerTitle { font-size: 14px; font-weight: 700; color: #1e293b; }
+.careerTarget { font-size: 12px; color: #16a34a; font-weight: 600; }
+.readinessPct { font-size: 36px; font-weight: 900; color: #16a34a; }
+.careerEst { font-size: 12px; color: #64748b; }
+
+@media (max-width: 1100px) {
+  .mainGrid { grid-template-columns: 1fr; }
+  .kpiGrid { grid-template-columns: repeat(2, 1fr); }
+}

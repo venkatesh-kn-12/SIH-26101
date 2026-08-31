@@ -1,0 +1,887 @@
+.page {
+  min-height: 100vh;
+  background: var(--gray-50);
+  color: var(--gray-800);
+}
+
+/* Hero Section */
+.hero {
+  padding: 60px 0 80px 0;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+  border-bottom: 1px solid var(--gray-200);
+  position: relative;
+  overflow: hidden;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFF5F5;
+  border: 1px solid rgba(200, 16, 46, 0.2);
+  color: var(--karnataka-red);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.karnatakaDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--karnataka-gold);
+}
+
+.heroTitle {
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--gov-primary);
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+
+.heroSubhead {
+  font-size: 17px;
+  color: var(--gray-600);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.trustBadges {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-top: 24px;
+  border-top: 1px solid var(--gray-200);
+}
+
+.trustItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.trustNumber {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--gov-primary);
+}
+
+.trustLabel {
+  font-size: 12px;
+  color: var(--gray-500);
+  font-weight: 600;
+}
+
+.trustDivider {
+  width: 1px;
+  height: 28px;
+  background: var(--gray-300);
+}
+
+/* Hero Visual Flow Card */
+.heroVisualCard {
+  background: white;
+  border-radius: var(--border-radius-xl);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-lg);
+  padding: 24px;
+}
+
+.visualHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--gray-100);
+  margin-bottom: 20px;
+}
+
+.visualBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--gray-800);
+}
+
+.livePulse {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+}
+
+.visualRole {
+  font-size: 11px;
+  color: var(--gray-500);
+  font-weight: 600;
+}
+
+.progressionFlow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.flowNode, .flowNodeActive, .flowNodeSuccess {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--border-radius);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+}
+
+.flowNodeActive {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+  position: relative;
+}
+
+.flowNodeSuccess {
+  background: #F0FDF4;
+  border-color: #BBF7D0;
+}
+
+.nodeIcon {
+  font-size: 20px;
+}
+
+.nodeText {
+  display: flex;
+  flex-direction: column;
+}
+
+.nodeText strong {
+  font-size: 13px;
+  color: var(--gray-900);
+}
+
+.nodeText span {
+  font-size: 11px;
+  color: var(--gray-500);
+}
+
+.aiTag {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 800;
+  background: var(--gov-primary);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.flowConnector {
+  text-align: center;
+  color: var(--gray-400);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Common Section Headers */
+.sectionHeaderCenter {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 48px auto;
+}
+
+.sectionTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--gray-900);
+  margin: 12px 0;
+  letter-spacing: -0.02em;
+}
+
+.sectionSubtitle {
+  font-size: 16px;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+/* Why Section / Comparison */
+.whySection {
+  padding: 80px 0;
+  background: white;
+}
+
+.comparisonGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.comparisonCardTraditional {
+  background: #FAF8F8;
+  border: 1px solid #E5E7EB;
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+}
+
+.compHeaderTraditional {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.compTagBad {
+  background: var(--error-bg);
+  color: var(--error);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.compFlow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.compStep {
+  background: white;
+  border: 1px solid var(--gray-300);
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.compArrow {
+  color: var(--gray-400);
+  font-weight: 700;
+}
+
+.comparisonCardStatpath {
+  background: #F0F7FF;
+  border: 2px solid var(--gov-primary);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.compHeaderStatpath {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #BFDBFE;
+}
+
+.compTagGood {
+  background: var(--success-bg);
+  color: var(--success);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.compStepGood {
+  background: white;
+  border: 1.5px solid var(--gov-primary);
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-weight: 700;
+  color: var(--gov-primary);
+}
+
+.compArrowGood {
+  color: var(--karnataka-red);
+  font-weight: 800;
+}
+
+/* How Section */
+.howSection {
+  padding: 80px 0;
+  background: var(--gray-50);
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.stepCard {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stepCard:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--karnataka-gold);
+}
+
+.stepHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.stepIcon {
+  font-size: 28px;
+}
+
+.stepNum {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--karnataka-red);
+}
+
+.stepTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 8px;
+}
+
+.stepDesc {
+  font-size: 14px;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+/* Domain Competencies Section */
+.domainsSection {
+  padding: 80px 0;
+  background: white;
+}
+
+.domainTabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.tabBtn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  background: var(--gray-100);
+  color: var(--gray-700);
+  transition: all 0.2s ease;
+}
+
+.activeTab {
+  background: var(--gov-primary);
+  color: white;
+}
+
+.domainCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.domainCard {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.domainCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.domainCardHeader h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.domainCountBadge {
+  font-size: 11px;
+  font-weight: 700;
+  background: white;
+  border: 1px solid var(--gray-300);
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: var(--gov-primary);
+}
+
+.domainCard p {
+  font-size: 13px;
+  color: var(--gray-600);
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.domainCardFooter {
+  border-top: 1px solid var(--gray-200);
+  padding-top: 12px;
+}
+
+.domainLink {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--karnataka-red);
+}
+
+/* Ecosystem Section */
+.ecosystemSection {
+  padding: 60px 0;
+  background: var(--gray-50);
+}
+
+.ecoCard {
+  background: linear-gradient(135deg, var(--gov-primary-dark) 0%, var(--gov-primary) 100%);
+  border-radius: var(--border-radius-xl);
+  color: white;
+  padding: 48px;
+}
+
+.ecoContent h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 16px 0;
+}
+
+.ecoContent p {
+  font-size: 16px;
+  color: #E2E8F0;
+  max-width: 800px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.ecoPipeline {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.ecoNode {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.ecoArrow {
+  color: var(--karnataka-gold);
+  font-weight: 800;
+}
+
+.ecoNotice {
+  font-size: 13px;
+  color: #94A3B8;
+}
+
+/* Learn Modes Section */
+.learnModesSection {
+  padding: 80px 0;
+  background: white;
+}
+
+.modesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.modeCard {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.modeCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--karnataka-red);
+}
+
+.modeIcon {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.modeCard h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 8px;
+}
+
+.modeCard p {
+  font-size: 13px;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+/* Studio Demo Section */
+.studioDemoSection {
+  padding: 80px 0;
+  background: var(--gray-50);
+}
+
+.studioBox {
+  background: white;
+  border-radius: var(--border-radius-xl);
+  border: 1px solid var(--gray-200);
+  padding: 40px;
+  box-shadow: var(--shadow-md);
+}
+
+.studioHeader {
+  margin-bottom: 32px;
+}
+
+.studioHeader h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 12px 0 6px 0;
+}
+
+.studioHeader p {
+  font-size: 15px;
+  color: var(--gray-600);
+}
+
+.demoUi {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+}
+
+.demoSidebar {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.uploadBox {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  background: white;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  border: 1px dashed var(--gov-primary);
+}
+
+.fileSize {
+  color: var(--gray-500);
+  font-size: 11px;
+}
+
+.formMiniGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formMiniGroup label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.demoQuestionCard {
+  background: white;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+}
+
+.qHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-500);
+}
+
+.qText {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.optBtn {
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-300);
+  background: white;
+  font-size: 13.5px;
+  color: var(--gray-800);
+  transition: all 0.2s ease;
+}
+
+.optBtn:hover {
+  border-color: var(--gov-primary);
+  background: var(--gray-50);
+}
+
+.optCorrect {
+  background: var(--success-bg) !important;
+  border-color: var(--success) !important;
+  color: var(--success) !important;
+  font-weight: 700;
+}
+
+.optWrong {
+  background: var(--error-bg) !important;
+  border-color: var(--error) !important;
+  color: var(--error) !important;
+}
+
+.explanationBox {
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  padding: 16px;
+  border-radius: var(--border-radius);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.explanationBox strong {
+  color: var(--success);
+}
+
+.sourceRef {
+  display: block;
+  font-size: 11px;
+  color: var(--gray-500);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* Loop Section */
+.loopSection {
+  padding: 80px 0;
+  background: white;
+}
+
+.loopDiagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.loopNodeCard {
+  background: var(--gray-50);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  padding: 16px;
+  width: 160px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.loopNodeCard strong {
+  font-size: 12px;
+  color: var(--gov-primary);
+  letter-spacing: 0.05em;
+}
+
+.loopNodeCard span {
+  font-size: 11px;
+  color: var(--gray-600);
+}
+
+.loopNodeNum {
+  width: 24px;
+  height: 24px;
+  background: var(--karnataka-red);
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 6px auto;
+}
+
+.loopArrowNode {
+  color: var(--karnataka-gold);
+  font-weight: 900;
+  font-size: 18px;
+}
+
+/* Footer */
+.footer {
+  background: var(--gray-900);
+  color: white;
+  padding: 60px 0 30px 0;
+  border-top: 4px solid var(--karnataka-red);
+}
+
+.footerTop {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--gray-800);
+}
+
+.footerLogo {
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.footerBrand p {
+  font-size: 13.5px;
+  color: var(--gray-400);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.govTaglineBox {
+  font-size: 12px;
+  color: var(--karnataka-gold);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  border-left: 3px solid var(--karnataka-gold);
+}
+
+.footerNavGroup h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.footerNavGroup a {
+  display: block;
+  font-size: 13px;
+  color: var(--gray-400);
+  margin-bottom: 10px;
+}
+
+.footerNavGroup a:hover {
+  color: var(--karnataka-gold);
+}
+
+.footerBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  font-size: 12px;
+  color: var(--gray-500);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footerLinks a {
+  color: var(--gray-400);
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+  }
+  .comparisonGrid {
+    grid-template-columns: 1fr;
+  }
+  .stepsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .domainCardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .modesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .demoUi {
+    grid-template-columns: 1fr;
+  }
+  .footerTop {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .heroTitle {
+    font-size: 28px;
+  }
+  .stepsGrid, .domainCardsGrid, .modesGrid {
+    grid-template-columns: 1fr;
+  }
+  .loopDiagram {
+    flex-direction: column;
+  }
+  .loopArrowNode {
+    transform: rotate(90deg);
+  }
+}

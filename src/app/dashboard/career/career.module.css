@@ -1,0 +1,32 @@
+.layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+.currentRole { padding: 16px; background: linear-gradient(135deg, #003087, #1a4aa8); color: white; margin-bottom: 12px; }
+.roleLabel { font-size: 11px; text-transform: uppercase; opacity: 0.7; margin-bottom: 4px; }
+.roleName { font-size: 18px; font-weight: 800; }
+.roleDept { font-size: 12px; opacity: 0.7; margin-top: 4px; }
+.roleSelector { padding: 16px; }
+.selectorTitle { font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+.roleOption { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; width: 100%; background: white; font-size: 13px; text-align: left; transition: all 0.2s; }
+.roleOption:hover { border-color: #003087; }
+.roleSelected { border-color: #003087 !important; background: #f0f7ff !important; }
+.roleOptName { flex: 1; font-weight: 500; color: #334155; }
+.roleReadiness { font-size: 13px; font-weight: 800; }
+.analysis { display: flex; flex-direction: column; gap: 16px; }
+.readinessCard { padding: 20px; }
+.readinessHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.readinessTitle { font-size: 15px; font-weight: 700; color: #0f172a; }
+.readinessRole { font-size: 13px; color: #64748b; margin-top: 2px; }
+.readinessPct { font-size: 40px; font-weight: 900; color: #003087; line-height: 1; }
+.readinessMeta { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-top: 8px; }
+.radarCard { padding: 20px; }
+.gapList { padding: 20px; }
+.skillGapRow { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+.skillGapRow:last-of-type { border-bottom: none; }
+.sgNum { width: 24px; height: 24px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #64748b; flex-shrink: 0; }
+.sgInfo { flex: 1; }
+.sgName { font-size: 13px; font-weight: 600; color: #1e293b; margin-bottom: 6px; }
+.sgBar { display: flex; align-items: center; gap: 8px; }
+.sgTrack { flex: 1; height: 8px; background: #e2e8f0; border-radius: 4px; position: relative; overflow: visible; }
+.sgFill { position: absolute; left: 0; top: 0; height: 100%; background: #003087; border-radius: 4px; }
+.sgTarget { position: absolute; top: -4px; width: 2px; height: 16px; background: #dc2626; }
+.sgVals { font-size: 12px; color: #64748b; white-space: nowrap; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }

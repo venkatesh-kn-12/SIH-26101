@@ -1,0 +1,27 @@
+.list { display: flex; flex-direction: column; gap: 12px; max-width: 800px; }
+.assessCard { padding: 20px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.acLeft { flex: 1; }
+.acType { margin-bottom: 8px; }
+.acTitle { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+.acMeta { font-size: 13px; color: #64748b; }
+.acRight { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.scored { display: flex; align-items: center; gap: 10px; }
+.scoreVal { font-size: 22px; font-weight: 800; color: #003087; }
+.scoreLbl { font-size: 11px; color: #94a3b8; }
+/* Active assessment */
+.assessmentView { max-width: 760px; }
+.aHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.aTitle { font-size: 16px; font-weight: 700; color: #0f172a; }
+.aProgress { font-size: 13px; color: #64748b; background: #f1f5f9; padding: 6px 14px; border-radius: 20px; }
+.qBox { background: white; border-radius: 16px; border: 1px solid #e2e8f0; padding: 32px; }
+.qMeta { display: flex; gap: 8px; margin-bottom: 16px; }
+.qText { font-size: 18px; font-weight: 700; color: #0f172a; line-height: 1.5; margin-bottom: 24px; }
+.opts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.opt { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 14px; color: #334155; background: white; text-align: left; transition: all 0.2s; }
+.opt:hover { border-color: #003087; }
+.optSel { border-color: #003087 !important; background: #dbeafe !important; }
+.optL { width: 28px; height: 28px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+.qNav { display: flex; justify-content: space-between; }
+.resultBox { background: white; border-radius: 16px; padding: 48px; text-align: center; border: 1px solid #e2e8f0; }
+.resultBox h2 { font-size: 22px; font-weight: 800; margin: 12px 0; }
+.scoreCircle { width: 100px; height: 100px; border-radius: 50%; border: 8px solid #003087; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; color: #003087; margin: 16px auto; }

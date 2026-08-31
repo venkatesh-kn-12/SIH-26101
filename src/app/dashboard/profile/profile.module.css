@@ -1,0 +1,22 @@
+.layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+.profileCard { background: white; border-radius: 16px; border: 1px solid #e2e8f0; padding: 24px; text-align: center; position: sticky; top: 0; }
+.avatar { width: 72px; height: 72px; background: linear-gradient(135deg, #003087, #1a4aa8); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; margin: 0 auto 12px; }
+.name { font-size: 18px; font-weight: 800; color: #0f172a; }
+.designation { font-size: 13px; color: #64748b; margin-top: 4px; }
+.empId { font-size: 12px; color: #94a3b8; font-family: monospace; margin-top: 2px; }
+.orgBadge { background: #dbeafe; color: #1e40af; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; margin: 12px 0; }
+.infoGrid { text-align: left; display: flex; flex-direction: column; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #f1f5f9; }
+.infoItem { }
+.infoLabel { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; margin-bottom: 2px; }
+.infoValue { font-size: 13px; color: #1e293b; font-weight: 500; }
+.rightCol { display: flex; flex-direction: column; gap: 16px; }
+.section { padding: 20px; }
+.compSummary { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+.sumItem { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: #64748b; text-align: center; }
+.tagCloud { display: flex; flex-wrap: wrap; gap: 8px; }
+.strengthTag { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+.gapTag { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+.historyRow { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+.historyRow:last-child { border-bottom: none; }
+.historyName { font-size: 13px; font-weight: 600; color: #1e293b; }
+.historyMeta { font-size: 12px; color: #94a3b8; margin-top: 2px; }
