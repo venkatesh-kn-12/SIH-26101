@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getOrderedRoleRecommendations, OrderedLearningStep } from '@/lib/recommendationEngine';
 import styles from './learn.module.css';
@@ -14,6 +14,18 @@ function formatDuration(seconds: string) {
 export default function LearnPage() {
   const [selectedRole, setSelectedRole] = useState<string>('Statistical Officer');
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  const [assessmentResults, setAssessmentResults] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('statpath_assessment_results');
+        if (stored) setAssessmentResults(JSON.parse(stored));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
 
   // Strictly fetched & ordered recommendation sequence consuming public/content-list-data.json
   const orderedPath: OrderedLearningStep[] = getOrderedRoleRecommendations(selectedRole);
@@ -30,6 +42,17 @@ export default function LearnPage() {
           <div className={styles.metaItem}>📚 {orderedPath.length} Sequential iGOT Courses</div>
         </div>
       </div>
+
+      {assessmentResults?.weakTopics?.length > 0 && (
+        <div style={{ background: '#EFF6FF', border: '1px solid #93C5FD', padding: '14px 18px', borderRadius: 8, marginBottom: 20 }}>
+          <div style={{ fontWeight: 700, color: '#1E40AF', fontSize: 14 }}>
+            🤖 StatPath AI Recommendation System (Active Baseline Diagnostic):
+          </div>
+          <p style={{ fontSize: 13, color: '#1E3A8A', marginTop: 4, marginBottom: 0 }}>
+            Based on your baseline assessment score of <strong>{assessmentResults.score}% ({assessmentResults.scoreFormatted})</strong>, the recommendation engine has prioritized courses bridging your identified section gaps: <strong>{assessmentResults.weakTopics.join(', ')}</strong>.
+          </p>
+        </div>
+      )}
 
       {/* Role Selection Selector */}
       <div className={`card ${styles.whyCard}`} style={{ marginBottom: 24 }}>

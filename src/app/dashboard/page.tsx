@@ -10,9 +10,18 @@ import styles from './overview.module.css';
 export default function DashboardPage() {
   const { t } = useLanguage();
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [assessmentData, setAssessmentData] = useState<any>(null);
 
   useEffect(() => {
     setUser(getCurrentUser());
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('statpath_assessment_results');
+        if (stored) setAssessmentData(JSON.parse(stored));
+      } catch (e) {
+        console.error(e);
+      }
+    }
   }, []);
 
   const topGaps = COMPETENCY_SCORES.filter(c => c.gap === 'high' || c.gap === 'medium').sort((a, b) => (b.required - b.current) - (a.required - a.current)).slice(0, 4);
@@ -29,6 +38,8 @@ export default function DashboardPage() {
     { name: 'Design Thinking', progress: 32, mode: 'iGOT Direct' },
   ];
 
+  const overallScoreFormatted = assessmentData?.scoreFormatted || '3.4 / 5.0';
+
   return (
     <div className={styles.page}>
       {/* Welcome */}
@@ -39,14 +50,16 @@ export default function DashboardPage() {
         </div>
         <div className={styles.welcomeMeta}>
           <span className="badge badge-success">● Active Learner</span>
-          <span className={styles.lastLogin}>Last assessment: 3 days ago</span>
+          <span className={styles.lastLogin}>
+            {assessmentData ? `Last Assessment: ${new Date(assessmentData.completedAt).toLocaleDateString('en-IN')}` : 'Last assessment: 3 days ago'}
+          </span>
         </div>
       </div>
 
       {/* KPI Cards */}
       <div className={styles.kpiGrid}>
         {[
-          { label: t('competencyScore') || 'Overall Competency', value: '3.4 / 5.0', sub: '+0.6 this quarter', color: '#003087', icon: '📊' },
+          { label: t('competencyScore') || 'Overall Competency', value: overallScoreFormatted, sub: assessmentData ? `Score: ${assessmentData.score}%` : '+0.6 this quarter', color: '#003087', icon: '📊' },
           { label: t('skillReadiness') || 'Career Readiness', value: `${CAREER_PATH.readiness}%`, sub: 'for Sr. Stat. Officer', color: '#16a34a', icon: '🎯' },
           { label: t('learningProgress') || 'Courses In Progress', value: '2', sub: '1 AI Guided, 1 iGOT', color: '#7c3aed', icon: '📚' },
           { label: t('learningTime') || 'Learning Streak', value: '12 days', sub: '47 min avg daily', color: '#FF6B00', icon: '🔥' },
@@ -61,6 +74,51 @@ export default function DashboardPage() {
           </div>
         ))}
       </div>
+
+      {/* Assessment Diagnostics & AI Skill Recommendation Section */}
+      {assessmentData && (
+        <div className="card" style={{ marginBottom: 24, borderLeft: '4px solid var(--ux4g-gov-navy)', background: '#F8FAFC' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 10 }}>
+            <div>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0F172A', margin: 0 }}>
+                📋 Assessment Diagnostics & Section Accuracy
+              </h3>
+              <p style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
+                Evaluated from your baseline assessment ({assessmentData.correctCount} / {assessmentData.totalQuestions} correct)
+              </p>
+            </div>
+            <span className="badge badge-primary" style={{ fontSize: 12 }}>
+              Score: {assessmentData.score}% ({assessmentData.scoreFormatted})
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 14 }}>
+            {assessmentData.topicDetails?.map((tItem: any) => (
+              <div key={tItem.id} style={{
+                padding: '6px 12px',
+                borderRadius: 6,
+                fontSize: 12,
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                background: tItem.isCorrect ? '#DCFCE7' : tItem.isAnswered ? '#FEE2E2' : '#FEF3C7',
+                color: tItem.isCorrect ? '#15803D' : tItem.isAnswered ? '#991B1B' : '#92400E',
+                border: `1px solid ${tItem.isCorrect ? '#86EFAC' : tItem.isAnswered ? '#FCA5A5' : '#FDE68A'}`
+              }}>
+                <span>{tItem.isCorrect ? '✓' : tItem.isAnswered ? '✕' : '⚠️'}</span>
+                <span>{tItem.topic}: <strong>{tItem.status}</strong></span>
+              </div>
+            ))}
+          </div>
+
+          {assessmentData.weakTopics?.length > 0 && (
+            <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '10px 14px', borderRadius: 6, fontSize: 13, color: '#1E40AF' }}>
+              🤖 <strong>AI Learning Path Recommendation:</strong> Based on your response section data, immediate focus is recommended on <strong>{assessmentData.weakTopics.join(', ')}</strong> modules on iGOT Karmayogi.
+            </div>
+          )}
+        </div>
+      )}
 
       <div className={styles.mainGrid}>
         {/* Left Column */}

@@ -12,6 +12,7 @@ export default function AssessmentPage() {
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes in seconds
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [assessmentSummary, setAssessmentSummary] = useState<any>(null);
 
   const total = ASSESSMENT_QUESTIONS.length;
   const q = ASSESSMENT_QUESTIONS[current];
@@ -28,7 +29,7 @@ export default function AssessmentPage() {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          setSubmitted(true);
+          finishAssessment();
           return 0;
         }
         return prev - 1;
@@ -38,6 +39,55 @@ export default function AssessmentPage() {
     return () => clearInterval(timer);
   }, [submitted, timeLeft]);
 
+  const finishAssessment = () => {
+    const topicDetails = ASSESSMENT_QUESTIONS.map((qItem, idx) => {
+      const selectedAnswer = answers[idx];
+      const isAnswered = selectedAnswer !== undefined;
+      const isCorrect = isAnswered && selectedAnswer === qItem.correctIndex;
+      return {
+        id: qItem.id,
+        topic: qItem.topic,
+        competency: qItem.competency,
+        text: qItem.text,
+        userAnswerIndex: selectedAnswer,
+        userAnswerText: isAnswered ? qItem.options[selectedAnswer] : 'Not Answered',
+        correctAnswerText: qItem.options[qItem.correctIndex],
+        isCorrect,
+        isAnswered,
+        status: !isAnswered ? 'Unanswered' : isCorrect ? 'Correct' : 'Incorrect'
+      };
+    });
+
+    const correctCount = topicDetails.filter(t => t.isCorrect).length;
+    const incorrectCount = topicDetails.filter(t => t.isAnswered && !t.isCorrect).length;
+    const unansweredCount = topicDetails.filter(t => !t.isAnswered).length;
+    const overallPercentage = Math.round((correctCount / total) * 100);
+
+    const weakTopics = Array.from(new Set(topicDetails.filter(t => !t.isCorrect).map(t => t.topic)));
+    const strongTopics = Array.from(new Set(topicDetails.filter(t => t.isCorrect).map(t => t.topic)));
+
+    const summary = {
+      score: overallPercentage,
+      scoreFormatted: `${(overallPercentage / 20).toFixed(1)} / 5.0`,
+      totalQuestions: total,
+      correctCount,
+      incorrectCount,
+      unansweredCount,
+      completedAt: new Date().toISOString(),
+      topicDetails,
+      weakTopics,
+      strongTopics
+    };
+
+    setAssessmentSummary(summary);
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('statpath_assessment_results', JSON.stringify(summary));
+    }
+
+    setSubmitted(true);
+  };
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -45,30 +95,69 @@ export default function AssessmentPage() {
   };
 
   const select = (idx: number) => { if (!submitted) setAnswers({ ...answers, [current]: idx }); };
-  const next = () => current < total - 1 ? setCurrent(current + 1) : setSubmitted(true);
+  const next = () => current < total - 1 ? setCurrent(current + 1) : finishAssessment();
   const prev = () => current > 0 && setCurrent(current - 1);
 
-  const score = submitted ? Math.round((Object.entries(answers).filter(([qi, ai]) => ASSESSMENT_QUESTIONS[+qi].correctIndex === ai).length / total) * 100) : 0;
-
-  if (submitted) return (
+  if (submitted && assessmentSummary) return (
     <div className={styles.page}>
-      <div className={styles.resultCard}>
-        <div className={styles.resultIcon}>{score >= 70 ? '🎉' : score >= 50 ? '📊' : '📖'}</div>
-        <h2 className={styles.resultTitle}>Baseline Assessment Complete</h2>
+      <div className={styles.resultCard} style={{ maxWidth: 760 }}>
+        <div className={styles.resultIcon}>{assessmentSummary.score >= 70 ? '🎉' : assessmentSummary.score >= 50 ? '📊' : '📖'}</div>
+        <h2 className={styles.resultTitle}>Baseline Assessment Diagnostics Complete</h2>
         <div className={styles.scoreCircle}>
-          <span className={styles.scoreNum}>{score}%</span>
-          <span className={styles.scoreLabel}>Score</span>
+          <span className={styles.scoreNum}>{assessmentSummary.score}%</span>
+          <span className={styles.scoreLabel}>Score ({assessmentSummary.scoreFormatted})</span>
         </div>
-        <p className={styles.resultDesc}>Your competency profile has been calculated. We've identified your strengths and priority gaps across {total} competency domains.</p>
-        <div className={styles.resultStats}>
-          {[{label:'Correct', val: Object.entries(answers).filter(([qi,ai]) => ASSESSMENT_QUESTIONS[+qi].correctIndex === ai).length, color:'#22c55e'},
-            {label:'Incorrect', val: total - Object.entries(answers).filter(([qi,ai]) => ASSESSMENT_QUESTIONS[+qi].correctIndex === ai).length, color:'#ef4444'},
-            {label:'Total', val: total, color:'#003087'},
-          ].map(s => (
-            <div key={s.label} className={styles.resStat}><span style={{ color: s.color, fontSize: 24, fontWeight: 800 }}>{s.val}</span><span>{s.label}</span></div>
-          ))}
+        <p className={styles.resultDesc}>
+          Your competency profile has been calculated and stored. StatPath AI has evaluated your response accuracy across key official statistical domains to generate your custom learning path.
+        </p>
+
+        {/* Detailed Topic & Section Diagnostics */}
+        <div style={{ marginTop: 24, textAlign: 'left' }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12, color: '#0F172A' }}>Section & Topic Response Breakdown</h3>
+          <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 8, overflow: 'hidden' }}>
+            {assessmentSummary.topicDetails.map((tItem: any, idx: number) => (
+              <div key={tItem.id} style={{
+                padding: '12px 16px',
+                borderBottom: idx === total - 1 ? 'none' : '1px solid #E2E8F0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                background: tItem.isCorrect ? '#F0FDF4' : tItem.isAnswered ? '#FEF2F2' : '#FFFBEB'
+              }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: '#0F172A' }}>
+                    Section: {tItem.topic} <span style={{ fontWeight: 400, color: '#64748B', fontSize: 12 }}>({tItem.competency})</span>
+                  </div>
+                  <div style={{ fontSize: 12, color: '#475569', marginTop: 2 }}>
+                    Q: {tItem.text}
+                  </div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <span className={`badge ${tItem.isCorrect ? 'badge-success' : tItem.isAnswered ? 'badge-error' : 'badge-warning'}`}>
+                    {tItem.status === 'Correct' ? '✓ Correct' : tItem.status === 'Incorrect' ? '✕ Incorrect' : '⚠️ Unanswered'}
+                  </span>
+                  <div style={{ fontSize: 11, marginTop: 4, fontWeight: 600, color: tItem.isCorrect ? '#166534' : '#991B1B' }}>
+                    {tItem.isCorrect ? 'Competency Verified' : 'Recommendation Gap'}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <button className="btn btn-primary btn-lg" onClick={() => router.push('/dashboard')} style={{ width: '100%', marginTop: 8 }}>
+
+        {/* AI Recommendations Callout */}
+        {assessmentSummary.weakTopics.length > 0 && (
+          <div style={{ marginTop: 20, background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 8, padding: 16, textAlign: 'left' }}>
+            <div style={{ fontWeight: 700, color: '#1E40AF', fontSize: 14, marginBottom: 6 }}>
+              🤖 AI Learning Path Recommendation System:
+            </div>
+            <p style={{ fontSize: 13, color: '#1E3A8A', margin: 0 }}>
+              Based on your missed/unanswered sections ({assessmentSummary.weakTopics.join(', ')}), StatPath AI will prioritize courses in <strong>{assessmentSummary.weakTopics[0]}</strong> to quickly raise your overall competency score.
+            </p>
+          </div>
+        )}
+
+        <button className="btn btn-primary btn-lg" onClick={() => router.push('/dashboard')} style={{ width: '100%', marginTop: 24 }}>
           View My Competency Profile & Learning Path →
         </button>
       </div>
