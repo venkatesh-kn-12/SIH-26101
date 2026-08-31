@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import styles from './dashboard.module.css';
+import { DEMO_USER } from '@/lib/mockData';
 import { useLanguage, SUPPORTED_LANGUAGES, Language } from '@/lib/LanguageContext';
 import { IndiaFlag } from '@/components/IndiaFlag';
 import { StatPathLogo } from '@/components/StatPathLogo';
@@ -31,20 +32,31 @@ const MOBILE_BOTTOM_NAV = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const { language, setLanguage } = useLanguage();
 
   useEffect(() => {
-    setCurrentUser(getCurrentUser());
+    const user = getCurrentUser();
+    setCurrentUser(user);
+
+    // Enforce baseline assessment completion before allowing dashboard access for registered users!
+    if (typeof window !== 'undefined' && user && user.empId !== DEMO_USER.employeeId) {
+      const hasAssessed = localStorage.getItem('statpath_assessment_results');
+      if (!hasAssessed) {
+        router.replace('/onboarding/assessment');
+        return;
+      }
+    }
 
     const loadNotifs = () => setNotifications(getNotifications());
     loadNotifs();
 
     window.addEventListener('statpath_notifications_updated', loadNotifs);
     return () => window.removeEventListener('statpath_notifications_updated', loadNotifs);
-  }, []);
+  }, [router]);
 
   const unread = notifications.filter(n => !n.read).length;
 
