@@ -216,14 +216,18 @@ export default function OnboardingPage() {
           {step === 3 && (
             <div>
               <h2 className={styles.stepTitle}>Career Progression Targets</h2>
-              <p className={styles.stepSubtitle}>Select your target career role to benchmark advanced competency requirements (Mandatory).</p>
+              <p className={styles.stepSubtitle}>Enter your target career role to benchmark advanced competency requirements (Mandatory).</p>
 
               <div className="form-group">
                 <label className="form-label">Target Career Role <span style={{ color: '#C8102E' }}>*</span></label>
-                <select className="form-select" value={data.careerGoal} onChange={e => setData({ ...data, careerGoal: e.target.value })} required>
-                  <option value="">Select Target Role</option>
-                  {CAREER_ROLES.map(v => <option key={v}>{v}</option>)}
-                </select>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. Deputy Director (DES), Senior Statistical Officer"
+                  value={data.careerGoal}
+                  onChange={e => setData({ ...data, careerGoal: e.target.value })}
+                  required
+                />
               </div>
 
               {data.careerGoal && (
