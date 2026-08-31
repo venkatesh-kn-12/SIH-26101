@@ -161,10 +161,10 @@ export default function OnboardingPage() {
             <div>
               <h2 className={styles.stepTitle}>Professional & Cadre Information</h2>
               <p className={styles.stepSubtitle}>Specify your years of experience and educational background (All fields mandatory).</p>
-              
+
               <div className="form-group">
                 <label className="form-label">Years of Experience in Official Statistics <span style={{ color: '#C8102E' }}>*</span></label>
-                <select className="form-select" value={data.experience} onChange={e => setData({...data, experience: e.target.value})} required>
+                <select className="form-select" value={data.experience} onChange={e => setData({ ...data, experience: e.target.value })} required>
                   <option value="">Select Experience Range</option>
                   {EXPERIENCE_RANGES.map(v => <option key={v}>{v}</option>)}
                 </select>
@@ -172,7 +172,7 @@ export default function OnboardingPage() {
 
               <div className="form-group">
                 <label className="form-label">Highest Educational Qualification <span style={{ color: '#C8102E' }}>*</span></label>
-                <select className="form-select" value={data.education} onChange={e => setData({...data, education: e.target.value})} required>
+                <select className="form-select" value={data.education} onChange={e => setData({ ...data, education: e.target.value })} required>
                   <option value="">Select Qualification</option>
                   {QUALIFICATIONS.map(v => <option key={v}>{v}</option>)}
                 </select>
@@ -181,12 +181,12 @@ export default function OnboardingPage() {
               {data.education === 'Other' && (
                 <div className="form-group" style={{ marginTop: 10 }}>
                   <label className="form-label">Specify Educational Qualification <span style={{ color: '#C8102E' }}>*</span></label>
-                  <input 
-                    className="form-input" 
-                    placeholder="e.g. M.Stat / M.A. Econometrics / Post Graduate Diploma..." 
-                    value={educationOther} 
-                    onChange={e => setEducationOther(e.target.value)} 
-                    required 
+                  <input
+                    className="form-input"
+                    placeholder="e.g. M.Stat / M.A. Econometrics / Post Graduate Diploma..."
+                    value={educationOther}
+                    onChange={e => setEducationOther(e.target.value)}
+                    required
                   />
                 </div>
               )}
@@ -196,17 +196,17 @@ export default function OnboardingPage() {
           {step === 2 && (
             <div>
               <h2 className={styles.stepTitle}>Prior Training & Online Courses</h2>
-              <p className={styles.stepSubtitle}>Detail your completed training programmes from iGOT Karmayogi or online learning portals.</p>
-              
+              <p className={styles.stepSubtitle}>Detail your completed training programmes from online learning portals.</p>
+
               <div className="form-group">
-                <label className="form-label">iGOT Karmayogi / Online Courses Completed <span style={{ color: '#C8102E' }}>*</span></label>
-                <textarea 
-                  className="form-input" 
-                  rows={4} 
-                  placeholder="e.g. Statistical Literacy, Data Cleaning with Python, Survey Sampling Methodology..." 
-                  value={data.completedCourses} 
-                  onChange={e => setData({...data, completedCourses: e.target.value})} 
-                  style={{ resize: 'vertical' }} 
+                <label className="form-label">Online Courses Completed <span style={{ color: '#C8102E' }}>*</span></label>
+                <textarea
+                  className="form-input"
+                  rows={4}
+                  placeholder="e.g. Statistical Literacy, Data Cleaning with Python, Survey Sampling Methodology..."
+                  value={data.completedCourses}
+                  onChange={e => setData({ ...data, completedCourses: e.target.value })}
+                  style={{ resize: 'vertical' }}
                   required
                 />
               </div>
@@ -219,11 +219,11 @@ export default function OnboardingPage() {
               <p className={styles.stepSubtitle}>Select your target career role to benchmark advanced competency requirements (Mandatory).</p>
               <div className={styles.careerGrid}>
                 {CAREER_ROLES.map(role => (
-                  <button 
+                  <button
                     key={role}
                     type="button"
                     className={`${styles.careerOption} ${data.careerGoal === role ? styles.careerSelected : ''}`}
-                    onClick={() => setData({...data, careerGoal: role})}
+                    onClick={() => setData({ ...data, careerGoal: role })}
                   >
                     <span className={styles.careerIcon} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Target size={18} color="#003087" />
@@ -247,10 +247,10 @@ export default function OnboardingPage() {
                 ← Previous
               </button>
             )}
-            <button 
-              type="button" 
-              className="btn btn-primary" 
-              style={{ marginLeft: 'auto' }} 
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ marginLeft: 'auto' }}
               onClick={next}
             >
               {step === STEPS.length - 1 ? 'Initiate Baseline Assessment →' : 'Continue →'}
