@@ -18,10 +18,10 @@
 .tabContent { padding: 24px 0; min-height: 400px; }
 
 /* Video */
-.videoSection { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.videoSection { display: grid; grid-template-columns: 3fr 2fr; gap: 20px; align-items: start; }
 .videoWrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; background: #0F172A; border: 1px solid #1E293B; }
 .videoIframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-.videoMeta { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.videoMeta { display: flex; flex-direction: column; gap: 16px; }
 .topicsList { background: white; border: 1px solid #E2E8F0; border-radius: 8px; padding: 18px; }
 .topicsList h3 { font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
 .topicChips { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -85,10 +85,10 @@
 .typingIndicator span:nth-child(3) { animation-delay: 0.4s; }
 @keyframes typingBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .courseHeader { margin: -16px -16px 20px -16px; padding: 20px; border-radius: 0; }
   .tabNav { overflow-x: auto; }
   .tab { font-size: 12px; padding: 12px 14px; white-space: nowrap; }
-  .videoMeta { grid-template-columns: 1fr; }
+  .videoSection { grid-template-columns: 1fr; }
   .doubtsSection { height: 440px; }
 }
