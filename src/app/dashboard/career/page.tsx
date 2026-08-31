@@ -1,6 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CAREER_PATH, COMPETENCY_SCORES } from '@/lib/mockData';
+import { getCurrentUser, UserProfile } from '@/lib/authStorage';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Legend } from 'recharts';
 import styles from './career.module.css';
 
@@ -10,6 +11,12 @@ const MONTHS = { 'Senior Statistical Officer': 14, 'Assistant Director': 24, 'De
 
 export default function CareerPage() {
   const [selected, setSelected] = useState('Senior Statistical Officer');
+  const [user, setUser] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    setUser(getCurrentUser());
+  }, []);
+
   const readiness = READINESS[selected as keyof typeof READINESS];
   const months = MONTHS[selected as keyof typeof MONTHS];
 
@@ -32,8 +39,8 @@ export default function CareerPage() {
         <div>
           <div className={`card ${styles.currentRole}`}>
             <div className={styles.roleLabel}>Current Role</div>
-            <div className={styles.roleName}>Statistical Officer</div>
-            <div className={styles.roleDept}>Price Statistics Division • MoSPI</div>
+            <div className={styles.roleName}>{user?.designation || 'Statistical Officer'}</div>
+            <div className={styles.roleDept}>{user?.dept || 'Economics Statistics Division (ESD)'} • MoSPI</div>
           </div>
           <div className={`card ${styles.roleSelector}`}>
             <div className={styles.selectorTitle}>What if I want to become...</div>

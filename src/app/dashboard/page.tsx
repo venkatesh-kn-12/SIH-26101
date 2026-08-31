@@ -1,12 +1,20 @@
 'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
-import { COMPETENCY_SCORES, DEMO_USER, NOTIFICATIONS, DAILY_BYTE, CAREER_PATH, IGOT_COURSES } from '@/lib/mockData';
+import { COMPETENCY_SCORES, NOTIFICATIONS, DAILY_BYTE, CAREER_PATH, IGOT_COURSES } from '@/lib/mockData';
+import { getCurrentUser, UserProfile } from '@/lib/authStorage';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell } from 'recharts';
 import styles from './overview.module.css';
 
 export default function DashboardPage() {
   const { t } = useLanguage();
+  const [user, setUser] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    setUser(getCurrentUser());
+  }, []);
+
   const topGaps = COMPETENCY_SCORES.filter(c => c.gap === 'high' || c.gap === 'medium').sort((a, b) => (b.required - b.current) - (a.required - a.current)).slice(0, 4);
   const strengths = COMPETENCY_SCORES.filter(c => c.gap === 'none' || c.current >= c.required - 0.3);
 
@@ -26,8 +34,8 @@ export default function DashboardPage() {
       {/* Welcome */}
       <div className={styles.welcome}>
         <div>
-          <h1 className={styles.welcomeTitle}>{t('greeting') || 'HELLO, Vamshi'} 👋</h1>
-          <p className={styles.welcomeSub}>{DEMO_USER.designation} • {DEMO_USER.department} • {DEMO_USER.employeeId}</p>
+          <h1 className={styles.welcomeTitle}>WELCOME, {(user?.name || 'Priya Sharma').toUpperCase()} 👋</h1>
+          <p className={styles.welcomeSub}>{user?.designation || 'Statistical Officer'} • {user?.dept || 'Economics Statistics Division (ESD)'} • {user?.empId || 'MOS/2019/1842'}</p>
         </div>
         <div className={styles.welcomeMeta}>
           <span className="badge badge-success">● Active Learner</span>

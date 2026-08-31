@@ -1,31 +1,52 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/LanguageContext';
-import { DEMO_USER, COMPETENCY_SCORES, CAREER_PATH } from '@/lib/mockData';
+import { COMPETENCY_SCORES, CAREER_PATH } from '@/lib/mockData';
+import { getCurrentUser, UserProfile } from '@/lib/authStorage';
 import styles from './profile.module.css';
 
 export default function ProfilePage() {
   const { t } = useLanguage();
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [onboarding, setOnboarding] = useState<{ experience?: string; education?: string; completedCourses?: string; careerGoal?: string }>({});
+
+  useEffect(() => {
+    setUser(getCurrentUser());
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('statpath_onboarding_data');
+        if (stored) setOnboarding(JSON.parse(stored));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
   const strengths = COMPETENCY_SCORES.filter(c => c.gap === 'none');
   const highGaps = COMPETENCY_SCORES.filter(c => c.gap === 'high');
+
+  const userInitials = user?.name
+    ? user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+    : 'PS';
 
   return (
     <div>
       <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 20 }}>👤 {t('screenReader') ? 'Official Profile' : 'My Profile'}</h1>
       <div className={styles.layout}>
         <div className={styles.profileCard}>
-          <div className={styles.avatar}>PS</div>
-          <div className={styles.name}>{DEMO_USER.name}</div>
-          <div className={styles.designation}>{DEMO_USER.designation}</div>
-          <div className={styles.empId}>{DEMO_USER.employeeId}</div>
-          <div className={styles.orgBadge}>{DEMO_USER.organisation}</div>
+          <div className={styles.avatar}>{userInitials}</div>
+          <div className={styles.name}>{user?.name || 'Priya Sharma'}</div>
+          <div className={styles.designation}>{user?.designation || 'Statistical Officer'}</div>
+          <div className={styles.empId}>{user?.empId || 'MOS/2019/1842'}</div>
+          <div className={styles.orgBadge}>{user?.organisation || 'Ministry of Statistics & Programme Implementation'}</div>
           <div className={styles.infoGrid}>
             {[
-              { label: 'Department', value: DEMO_USER.department },
-              { label: 'Rank', value: DEMO_USER.rank },
-              { label: 'Email', value: DEMO_USER.email },
-              { label: 'Experience', value: '5–10 years' },
-              { label: 'Education', value: 'M.Sc. Statistics' },
-              { label: 'Career Goal', value: CAREER_PATH.target },
+              { label: 'Department', value: user?.dept || 'Economics Statistics Division (ESD)' },
+              { label: 'Rank', value: user?.rank || 'Group A' },
+              { label: 'Email', value: user?.email || 'priya.sharma@mospi.gov.in' },
+              { label: 'Experience', value: onboarding.experience || '5–10 years' },
+              { label: 'Education', value: onboarding.education || 'M.Sc. Statistics' },
+              { label: 'Career Goal', value: onboarding.careerGoal || CAREER_PATH.target },
             ].map(i => (
               <div key={i.label} className={styles.infoItem}>
                 <div className={styles.infoLabel}>{i.label}</div>

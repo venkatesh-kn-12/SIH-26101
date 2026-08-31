@@ -1,7 +1,8 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ASSESSMENT_QUESTIONS } from '@/lib/mockData';
+import { getCurrentUser, UserProfile } from '@/lib/authStorage';
 import styles from './assessment.module.css';
 
 export default function AssessmentPage() {
@@ -9,9 +10,39 @@ export default function AssessmentPage() {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [submitted, setSubmitted] = useState(false);
-  const [timeLeft] = useState(30);
+  const [timeLeft, setTimeLeft] = useState(900); // 15 minutes in seconds
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+
   const total = ASSESSMENT_QUESTIONS.length;
   const q = ASSESSMENT_QUESTIONS[current];
+
+  useEffect(() => {
+    setCurrentUser(getCurrentUser());
+  }, []);
+
+  // Real-time countdown timer
+  useEffect(() => {
+    if (submitted || timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setSubmitted(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [submitted, timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const select = (idx: number) => { if (!submitted) setAnswers({ ...answers, [current]: idx }); };
   const next = () => current < total - 1 ? setCurrent(current + 1) : setSubmitted(true);
@@ -50,9 +81,13 @@ export default function AssessmentPage() {
         <div className={styles.header}>
           <div>
             <h1 className={styles.title}>Adaptive Baseline Assessment</h1>
-            <p className={styles.subtitle}>Role: Statistical Officer • Price Statistics Division</p>
+            <p className={styles.subtitle}>
+              Role: {currentUser?.designation || 'Statistical Officer'} • {currentUser?.dept || 'Price Statistics Division'}
+            </p>
           </div>
-          <div className={styles.timer}>⏱ {timeLeft} min remaining</div>
+          <div className={styles.timer} style={{ color: timeLeft < 120 ? '#C8102E' : 'inherit', fontWeight: 700 }}>
+            ⏱ {formatTime(timeLeft)} remaining
+          </div>
         </div>
 
         <div className={styles.progressRow}>
