@@ -1,26 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'ux4g-web-components/styles.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
   /* UX4G Official Government of India Design System 3.0 Tokens */
-  --ux4g-brand-purple: #5C2483;
-  --ux4g-brand-purple-dark: #3A1958;
   --ux4g-gov-navy: #003087;
   --ux4g-gov-navy-dark: #001F5C;
+  --ux4g-gov-navy-light: #0A42A8;
   --ux4g-saffron: #FF9933;
-  --ux4g-saffron-dark: #E06A00;
+  --ux4g-saffron-dark: #D97706;
   --ux4g-green: #138808;
   --ux4g-green-dark: #0D6806;
+  --ux4g-red: #C8102E;
+  --ux4g-red-dark: #A00C24;
 
   /* Primary Theme Maps (UX4G Standard) */
   --gov-primary: var(--ux4g-gov-navy);
   --gov-primary-dark: var(--ux4g-gov-navy-dark);
-  --gov-primary-light: #1A4AA8;
+  --gov-primary-light: var(--ux4g-gov-navy-light);
   
   /* National Identity Accents (UX4G Compliant) */
   --gov-accent-saffron: var(--ux4g-saffron);
   --gov-accent-saffron-dark: var(--ux4g-saffron-dark);
   --gov-accent-green: var(--ux4g-green);
-  --karnataka-red: #C8102E;
+  --karnataka-red: var(--ux4g-red);
   --karnataka-gold: var(--ux4g-saffron);
   
   /* UX4G Functional Grayscale */
@@ -46,23 +48,23 @@
   --info-bg: #E0F2FE;
 
   /* Skill Level Colors */
-  --skill-beginner: #EF4444;
-  --skill-basic: #F97316;
-  --skill-intermediate: #EAB308;
-  --skill-advanced: #22C55E;
+  --skill-beginner: #DC2626;
+  --skill-basic: #EA580C;
+  --skill-intermediate: #D97706;
+  --skill-advanced: #16A34A;
   --skill-expert: #0284C7;
 
   /* UX4G Component Tokens */
   --sidebar-width: 260px;
   --header-height: 64px;
-  --border-radius-sm: 6px;
-  --border-radius: 8px;
-  --border-radius-lg: 12px;
-  --border-radius-xl: 16px;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --border-radius-sm: 4px;
+  --border-radius: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 12px;
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
 }
 
 /* High Contrast Mode Overrides */
@@ -77,8 +79,8 @@
 }
 
 /* Font Size Scaling */
-[data-fontsize="large"] { font-size: 16px !important; }
-[data-fontsize="xlarge"] { font-size: 18px !important; }
+[data-fontsize="large"] { font-size: 15px !important; }
+[data-fontsize="xlarge"] { font-size: 16px !important; }
 
 * {
   box-sizing: border-box;
@@ -88,8 +90,9 @@
 
 html, body {
   height: 100%;
-  font-family: 'Inter', 'Noto Sans Kannada', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Noto Sans Kannada', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 14px;
+  line-height: 1.5;
   color: var(--gray-800);
   background: var(--gray-50);
   -webkit-font-smoothing: antialiased;
@@ -100,9 +103,9 @@ a { color: inherit; text-decoration: none; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
 input, textarea, select { font-family: inherit; }
 
-/* Focus indicator for keyboard navigation accessibility */
+/* Focus indicator for UX4G accessibility */
 *:focus-visible {
-  outline: 3px solid var(--karnataka-gold) !important;
+  outline: 2px solid var(--ux4g-saffron) !important;
   outline-offset: 2px !important;
 }
 
@@ -116,157 +119,166 @@ input, textarea, select { font-family: inherit; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 .container-lg { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
 
-/* Signature Competency Journey Line */
-.competency-journey-line {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.15;
-}
-
-/* Button base styles */
-.btn {
+/* UX4G Official Button Standards & Class Mapping */
+.btn, .ux4g-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 8px 18px;
   border-radius: var(--border-radius);
   font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  font-size: 13.5px;
+  line-height: 1.4;
+  transition: all 0.15s ease-in-out;
   white-space: nowrap;
-  min-height: 40px;
+  min-height: 38px;
+  border: 1px solid transparent;
 }
-.btn-primary {
-  background: var(--gov-primary);
-  color: white;
+
+.btn-primary, .ux4g-btn-primary {
+  background: var(--ux4g-gov-navy);
+  color: #FFFFFF;
+  border-color: var(--ux4g-gov-navy);
 }
-.btn-primary:hover { background: var(--gov-primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-primary:hover, .ux4g-btn-primary:hover {
+  background: var(--ux4g-gov-navy-dark);
+  border-color: var(--ux4g-gov-navy-dark);
+  box-shadow: var(--shadow-sm);
+}
 
 .btn-karnataka {
-  background: var(--karnataka-red);
-  color: white;
+  background: var(--ux4g-red);
+  color: #FFFFFF;
+  border-color: var(--ux4g-red);
 }
-.btn-karnataka:hover { background: var(--karnataka-red-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
-
-.btn-secondary {
-  background: white;
-  color: var(--gov-primary);
-  border: 1.5px solid var(--gray-300);
+.btn-karnataka:hover {
+  background: var(--ux4g-red-dark);
+  border-color: var(--ux4g-red-dark);
+  box-shadow: var(--shadow-sm);
 }
-.btn-secondary:hover { background: var(--gray-100); border-color: var(--gov-primary); }
 
-.btn-accent {
-  background: var(--karnataka-gold);
+.btn-secondary, .ux4g-btn-secondary {
+  background: #FFFFFF;
+  color: var(--ux4g-gov-navy);
+  border-color: var(--gray-300);
+}
+.btn-secondary:hover, .ux4g-btn-secondary:hover {
+  background: var(--gray-100);
+  border-color: var(--ux4g-gov-navy);
+  color: var(--ux4g-gov-navy-dark);
+}
+
+.btn-accent, .ux4g-btn-accent {
+  background: var(--ux4g-saffron);
   color: var(--gray-900);
+  border-color: var(--ux4g-saffron-dark);
 }
-.btn-accent:hover { background: var(--karnataka-yellow); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-accent:hover, .ux4g-btn-accent:hover {
+  background: var(--ux4g-saffron-dark);
+  color: #FFFFFF;
+  box-shadow: var(--shadow-sm);
+}
 
-.btn-sm { padding: 6px 14px; font-size: 13px; min-height: 34px; }
-.btn-lg { padding: 14px 28px; font-size: 16px; min-height: 48px; }
+.btn-sm, .ux4g-btn-sm { padding: 5px 12px; font-size: 12.5px; min-height: 32px; }
+.btn-lg, .ux4g-btn-lg { padding: 12px 24px; font-size: 15px; min-height: 44px; }
 
-/* Card */
-.card {
-  background: white;
+/* UX4G Standard Card & Badge */
+.card, .ux4g-card {
+  background: #FFFFFF;
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--gray-200);
   box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.card:hover {
+.card:hover, .ux4g-card:hover {
+  border-color: var(--gray-300);
   box-shadow: var(--shadow);
 }
 
-/* Badge */
-.badge {
+.badge, .ux4g-badge {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: var(--border-radius-sm);
+  font-size: 11px;
   font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
 }
-.badge-primary { background: var(--info-bg); color: var(--info); }
-.badge-karnataka { background: #FEE2E2; color: var(--karnataka-red); border: 1px solid rgba(200, 16, 46, 0.2); }
-.badge-gold { background: #FEF3C7; color: #92400E; border: 1px solid rgba(247, 184, 1, 0.4); }
-.badge-success { background: var(--success-bg); color: var(--success); }
-.badge-warning { background: var(--warning-bg); color: var(--warning); }
-.badge-error { background: var(--error-bg); color: var(--error); }
-.badge-gray { background: var(--gray-100); color: var(--gray-600); }
+.badge-primary, .ux4g-badge-primary { background: var(--info-bg); color: var(--info); border: 1px solid #BAE6FD; }
+.badge-karnataka { background: #FEE2E2; color: var(--ux4g-red); border: 1px solid #FECACA; }
+.badge-gold { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+.badge-success, .ux4g-badge-success { background: var(--success-bg); color: var(--success); border: 1px solid #BBF7D0; }
+.badge-warning, .ux4g-badge-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid #FDE68A; }
+.badge-error, .ux4g-badge-error { background: var(--error-bg); color: var(--error); border: 1px solid #FECACA; }
+.badge-gray, .ux4g-badge-gray { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
 
 /* Progress bar */
 .progress-bar {
-  height: 8px;
+  height: 6px;
   background: var(--gray-200);
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  border-radius: 4px;
-  background: var(--gov-primary);
-  transition: width 0.6s ease;
+  border-radius: 3px;
+  background: var(--ux4g-gov-navy);
+  transition: width 0.4s ease;
 }
 
-/* Form elements */
-.form-group { margin-bottom: 20px; }
-.form-label {
+/* Form controls UX4G standard */
+.form-group, .ux4g-form-group { margin-bottom: 16px; }
+.form-label, .ux4g-form-label {
   display: block;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--gray-700);
   margin-bottom: 6px;
 }
-.form-input {
+.form-input, .ux4g-form-input {
   width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid var(--gray-300);
+  padding: 8px 12px;
+  border: 1px solid var(--gray-300);
   border-radius: var(--border-radius);
-  font-size: 14px;
+  font-size: 13.5px;
   color: var(--gray-800);
-  background: white;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #FFFFFF;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
-.form-input:focus {
+.form-input:focus, .ux4g-form-input:focus {
   outline: none;
-  border-color: var(--gov-primary);
-  box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.1);
+  border-color: var(--ux4g-gov-navy);
+  box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.12);
 }
-.form-select {
+.form-select, .ux4g-form-select {
   width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid var(--gray-300);
+  padding: 8px 12px;
+  border: 1px solid var(--gray-300);
   border-radius: var(--border-radius);
-  font-size: 14px;
+  font-size: 13.5px;
   color: var(--gray-800);
-  background: white;
-  transition: border-color 0.2s;
+  background: #FFFFFF;
+  transition: border-color 0.15s;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
-  padding-right: 36px;
+  padding-right: 32px;
 }
 
 /* Animations */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-.fade-in { animation: fadeIn 0.3s ease forwards; }
-.slide-in { animation: slideIn 0.3s ease forwards; }
+.fade-in { animation: fadeIn 0.25s ease forwards; }
 
 .spinner {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border: 2px solid var(--gray-200);
-  border-top-color: var(--gov-primary);
+  border-top-color: var(--ux4g-gov-navy);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -274,5 +286,5 @@ input, textarea, select { font-family: inherit; }
 /* Responsive */
 @media (max-width: 768px) {
   .container, .container-lg { padding: 0 16px; }
-  .btn-lg { padding: 12px 20px; font-size: 15px; }
+  .btn-lg, .ux4g-btn-lg { padding: 10px 18px; font-size: 14px; }
 }

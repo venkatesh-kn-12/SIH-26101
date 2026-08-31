@@ -15,7 +15,7 @@
 - 🎯 **Role-Based Competencies**: Dynamic mapping from rule-based to role-based skill mastery
 - 🌐 **Inclusive & Multilingual**: Supports 12+ Indian languages for seamless regional adoption
 
----
+
 
 ## 🔥 Key Features
 
@@ -76,12 +76,12 @@ Ensure you have the following installed on your machine:
    ```
 
 4. **Run the Development Server**:
-   ```bash
+   
    npm run dev
-   ```
+   
 
 5. **Access the Application**:
-   Open [http://localhost:3000](http://localhost:3000) in your web browser.
+   Open [http://localhost:3000]
 
 ---
 
@@ -127,7 +127,7 @@ StatPath AI is optimized for seamless zero-config deployment on **Vercel** or an
 
 ### Deploying on Vercel
 1. Push your code to a GitHub / GitLab repository.
-2. Import the repository into [Vercel](https://vercel.com/new).
+2. Import the repository into (https://vercel.com/new).
 3. Set the Environment Variable `NEXT_PUBLIC_GEMINI_API_KEY` (if applicable).
 4. Click **Deploy**. Vercel will automatically build and publish your project!
 
