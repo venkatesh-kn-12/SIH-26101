@@ -40,6 +40,49 @@ export default function AdminPage() {
 
   const deptData = ORG_STATS.departments.map(d => ({ name: d.name.split(' ')[0], score: d.avgScore, completion: d.completionRate }));
 
+  const handleExportReport = () => {
+  try {
+    const rows = [
+      ['Metric', 'Value'],
+      ['Total Employees', ORG_STATS.totalEmployees],
+      ['Active Users', ORG_STATS.activeUsers],
+      ['Average Skill Score', ORG_STATS.avgSkillScore],
+      ['High Priority Gaps', ORG_STATS.highPriorityGaps],
+      ['Completion Rate', `${ORG_STATS.completionRate}%`],
+      ['Learning Hours', ORG_STATS.learningHoursTotal],
+    ];
+
+    const csv = rows
+      .map(row =>
+        row
+          .map(value => `"${String(value).replace(/"/g, '""')}"`)
+          .join(',')
+      )
+      .join('\n');
+
+    const blob = new Blob([csv], {
+      type: 'text/csv;charset=utf-8;',
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `statpath-admin-report-${new Date()
+      .toISOString()
+      .split('T')[0]}.csv`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Report export failed:', error);
+    alert('Failed to export report.');
+  }
+};
+
   return (
     <div className={styles.layout}>
       {/* Sidebar */}
@@ -71,7 +114,12 @@ export default function AdminPage() {
             {NAV_ITEMS.find(n => n.id === tab)?.icon} {NAV_ITEMS.find(n => n.id === tab)?.label}
           </h1>
           <div className={styles.topBarRight}>
-            <button className="btn btn-secondary btn-sm">📥 Export Report</button>
+            <button
+  className="btn btn-secondary btn-sm"
+  onClick={handleExportReport}
+>
+  📥 Export Report
+</button>
             <span className={styles.govBadge}>🇮🇳 MoSPI Admin Portal</span>
           </div>
         </div>
