@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getOrderedRoleRecommendations, OrderedLearningStep } from '@/lib/recommendationEngine';
 import { getCurrentUser, UserProfile } from '@/lib/authStorage';
 import { DEMO_USER } from '@/lib/mockData';
+import { BookOpen, User, Target, Award, Clock, ArrowRight, Sparkles } from 'lucide-react';
 import styles from './learn.module.css';
 
 function formatDuration(seconds: string) {
@@ -59,16 +60,16 @@ export default function LearnPage() {
             <p className={styles.subtitle}>Curated directly from the official iGOT Karmayogi catalog for your designation.</p>
           </div>
           <div className={styles.pathMeta}>
-            <div className={styles.metaItem}>🎯 Target Role: <strong>{selectedRole}</strong></div>
-            <div className={styles.metaItem}>📚 {orderedPath.length} Sequential iGOT Courses</div>
+            <div className={styles.metaItem}>Target Role: <strong>{selectedRole}</strong></div>
+            <div className={styles.metaItem}>{orderedPath.length} Sequential iGOT Courses</div>
           </div>
         </div>
 
         <div className={`card ${styles.whyCard}`} style={{ marginBottom: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
             <div>
-              <div className={styles.whyTitle}>📌 Select Officer Role Profile:</div>
-              <p style={{ fontSize: 13, color: 'var(--gray-600)' }}>StatPath AI dynamically matches and orders courses strictly from iGOT content-list-data.json based on official role competency requirements.</p>
+              <div className={styles.whyTitle}>Select Officer Role Profile:</div>
+              <p style={{ fontSize: 13, color: 'var(--gray-600)' }}>StatPath AI dynamically matches and orders courses strictly from official iGOT content data based on competency requirements.</p>
             </div>
             <select 
               value={selectedRole} 
@@ -106,17 +107,17 @@ export default function LearnPage() {
                   <div className={styles.courseInfo}>
                     <div className={styles.courseName}>{c.name}</div>
                     <div className={styles.courseMeta}>
-                      <span>🏛️ Provider: <strong>{c.source}</strong></span>
-                      <span>⏱️ Duration: <strong>{formatDuration(c.duration)}</strong></span>
-                      <span>🆔 iGOT ID: <code>{c.identifier}</code></span>
+                      <span>Provider: <strong>{c.source}</strong></span>
+                      <span>Duration: <strong>{formatDuration(c.duration)}</strong></span>
+                      <span>iGOT ID: <code>{c.identifier}</code></span>
                     </div>
                     <div style={{ marginTop: 8, fontSize: 12, color: 'var(--gray-700)', background: '#EFF6FF', padding: '6px 10px', borderRadius: 4 }}>
-                      🧠 <strong>Why Required in Order:</strong> {step.recommendationReason}
+                      <strong>Why Required in Order:</strong> {step.recommendationReason}
                     </div>
                   </div>
                   <div className={styles.courseActions}>
                     <Link href="/dashboard/learn/course" className="btn btn-primary btn-sm">
-                      Start Learning →
+                      Start Learning <ArrowRight size={14} style={{ marginLeft: 4 }} />
                     </Link>
                   </div>
                 </div>
@@ -139,15 +140,15 @@ export default function LearnPage() {
           </p>
         </div>
         <div className={styles.pathMeta}>
-          <div className={styles.metaItem}>👤 {user?.designation || 'Officer'}</div>
-          <div className={styles.metaItem}>📚 {SAMPLE_COURSES.length} Available Courses</div>
+          <div className={styles.metaItem}>{user?.designation || 'Officer'}</div>
+          <div className={styles.metaItem}>{SAMPLE_COURSES.length} Available Course</div>
         </div>
       </div>
 
       {assessmentResults?.weakTopics?.length > 0 && (
         <div style={{ background: '#EFF6FF', border: '1px solid #93C5FD', padding: '14px 18px', borderRadius: 8, marginBottom: 20 }}>
-          <div style={{ fontWeight: 700, color: '#1E40AF', fontSize: 14 }}>
-            🤖 StatPath AI Recommendation Engine:
+          <div style={{ fontWeight: 700, color: '#1E40AF', fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Sparkles size={16} /> StatPath AI Recommendation Engine:
           </div>
           <p style={{ fontSize: 13, color: '#1E3A8A', marginTop: 4, marginBottom: 0 }}>
             Based on your baseline assessment score of <strong>{assessmentResults.score}% ({assessmentResults.scoreFormatted})</strong>, courses are prioritized to bridge your identified gaps: <strong>{assessmentResults.weakTopics.join(', ')}</strong>.
@@ -175,13 +176,13 @@ export default function LearnPage() {
               <div className={styles.courseInfo}>
                 <div className={styles.courseName}>{course.title}</div>
                 <div className={styles.courseMeta}>
-                  <span>🏛️ Provider: <strong>{course.provider}</strong></span>
-                  <span>⏱️ Duration: <strong>{course.duration}</strong></span>
-                  <span>📊 Difficulty: <strong>{course.difficulty}</strong></span>
+                  <span>Provider: <strong>{course.provider}</strong></span>
+                  <span>Duration: <strong>{course.duration}</strong></span>
+                  <span>Difficulty: <strong>{course.difficulty}</strong></span>
                 </div>
                 <div style={{ marginTop: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                   {course.topics.map(t => (
-                    <span key={t} style={{ padding: '4px 10px', borderRadius: 12, background: '#DBEAFE', color: '#1E40AF', fontSize: 11, fontWeight: 600 }}>
+                    <span key={t} style={{ padding: '4px 10px', borderRadius: 4, background: '#EFF6FF', color: '#1E40AF', fontSize: 11, fontWeight: 600, border: '1px solid #BFDBFE' }}>
                       {t}
                     </span>
                   ))}
@@ -189,7 +190,7 @@ export default function LearnPage() {
               </div>
               <div className={styles.courseActions}>
                 <Link href="/dashboard/learn/course" className="btn btn-primary btn-sm" style={{ whiteSpace: 'nowrap' }}>
-                  Start Learning →
+                  Start Learning <ArrowRight size={14} style={{ marginLeft: 4 }} />
                 </Link>
               </div>
             </div>
@@ -199,7 +200,9 @@ export default function LearnPage() {
 
       {/* Placeholder Notice */}
       <div className="card" style={{ textAlign: 'center', padding: 32, background: '#F8FAFC', border: '1px dashed #CBD5E1' }}>
-        <div style={{ fontSize: 36, marginBottom: 8 }}>📚</div>
+        <div style={{ display: 'inline-flex', padding: 12, borderRadius: '50%', background: '#F1F5F9', color: '#003087', marginBottom: 8 }}>
+          <BookOpen size={24} />
+        </div>
         <div style={{ fontWeight: 700, fontSize: 15, color: '#0F172A' }}>More Courses Coming Soon</div>
         <p style={{ fontSize: 13, color: '#64748B', marginTop: 4, maxWidth: 500, margin: '4px auto 0 auto' }}>
           StatPath AI will continuously fetch and recommend official iGOT Karmayogi courses based on your evolving competency profile and assessment performance.

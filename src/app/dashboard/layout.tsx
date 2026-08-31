@@ -9,7 +9,7 @@ import { IndiaFlag } from '@/components/IndiaFlag';
 import { StatPathLogo } from '@/components/StatPathLogo';
 import { getCurrentUser, logoutUser, UserProfile } from '@/lib/authStorage';
 import { getNotifications, AppNotification } from '@/lib/notificationStorage';
-import { Home, User, BarChart3, BookOpen, Zap, FileText, Target, Bell, LogOut, Globe } from 'lucide-react';
+import { Home, User, BarChart3, BookOpen, Zap, FileText, Target, Bell, LogOut, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const NAV = [
   { href: '/dashboard', icon: <Home size={18} />, label: 'Overview' },
@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             onClick={() => setSidebarOpen(!sidebarOpen)}
             title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           >
-            {sidebarOpen ? '◀' : '▶'}
+            {sidebarOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
           </button>
         </div>
 

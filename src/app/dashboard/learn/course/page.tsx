@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { getCurrentUser, UserProfile } from '@/lib/authStorage';
+import { PlayCircle, FileText, CheckSquare, MessageSquare, Bot, Check, X, ArrowLeft, Send } from 'lucide-react';
 import styles from './course.module.css';
 
 interface QuizQuestion { question: string; options: string[]; correctIndex: number; explanation: string; }
@@ -58,7 +59,7 @@ const QUIZ: QuizQuestion[] = [
 
 const AI_KB: Record<string, string> = {
   'variable': '**Variables** in Python are named references to values in memory. No type declaration is needed:\n\n```python\npopulation = 140000000   # int\ngrowth_rate = 1.2        # float\nstate = "Maharashtra"    # str\nis_urban = True          # bool\n```\n\nFollow snake_case naming convention (PEP 8). Variable names are case-sensitive.',
-  'data type': 'Python core **data types**:\n• **int** — whole numbers: `household_count = 5420`\n• **float** — decimals: `cpi_index = 178.45`\n• **str** — text: `district = "Pune"`\n• **bool** — True/False: `is_metro = True`\n• **list** — ordered, mutable: `[1, 2, 3]`\n• **dict** — key-value: `{"year": 2021}`\n• **tuple** — ordered, immutable: `(19.07, 72.87)`\n\nCheck type with `type(variable_name)`.',
+  'data type': 'Python core **data types**:\n- **int** — whole numbers: `household_count = 5420`\n- **float** — decimals: `cpi_index = 178.45`\n- **str** — text: `district = "Pune"`\n- **bool** — True/False: `is_metro = True`\n- **list** — ordered, mutable: `[1, 2, 3]`\n- **dict** — key-value: `{"year": 2021}`\n- **tuple** — ordered, immutable: `(19.07, 72.87)`\n\nCheck type with `type(variable_name)`.',
   'list': '**Lists** are ordered, mutable sequences:\n\n```python\nstates = ["Maharashtra", "Karnataka", "Tamil Nadu"]\nstates[0]           # "Maharashtra"\nstates.append("Kerala")\nlen(states)          # 4\n```\n\nUseful methods: `.append()`, `.remove()`, `.sort()`, `.reverse()`, list comprehensions: `[x*2 for x in range(5)]`.',
   'dict': '**Dictionaries** store key-value pairs:\n\n```python\ncensus = {\n  "year": 2021,\n  "population": 1400000000,\n  "growth_rate": 1.2\n}\ncensus["population"]    # 1400000000\ncensus.keys()           # dict_keys\ncensus.get("year", "N/A")\n```',
   'function': '**Functions** are reusable code blocks:\n\n```python\ndef calculate_growth(current, previous):\n    """Calculate percentage growth rate."""\n    return ((current - previous) / previous) * 100\n\nrate = calculate_growth(1400, 1210)  # ~15.7%\n```\n\nUse docstrings, type hints, and default parameters for production code.',
@@ -69,7 +70,7 @@ const AI_KB: Record<string, string> = {
   'numpy': '**NumPy** — numerical computing:\n\n```python\nimport numpy as np\ndata = [23, 45, 67, 89, 12]\nnp.mean(data)   # 47.2\nnp.std(data)    # 28.17\nnp.median(data) # 45.0\narr = np.array(data)\n```',
   'matplotlib': '**Matplotlib** — data visualisation:\n\n```python\nimport matplotlib.pyplot as plt\nstates = ["MH", "KA", "TN"]\npop = [112, 61, 72]\nplt.bar(states, pop)\nplt.xlabel("State")\nplt.ylabel("Population (M)")\nplt.title("State Population")\nplt.show()\n```',
   'file': '**File I/O** in Python:\n\n```python\n# Reading\nwith open("data.csv", "r") as f:\n    content = f.read()\n\n# Writing\nwith open("report.txt", "w") as f:\n    f.write("Analysis complete")\n\n# pandas CSV\ndf = pd.read_csv("survey.csv")\ndf.to_csv("output.csv", index=False)\n```',
-  'default': 'I can help you understand any concept from this Python module. Try asking about:\n• Variables & data types\n• Lists, dictionaries, tuples\n• Functions & control flow\n• pandas & data analysis\n• NumPy, Matplotlib\n• File handling\n• Installation & setup',
+  'default': 'I can help you understand any concept from this Python module. Try asking about:\n- Variables & data types\n- Lists, dictionaries, tuples\n- Functions & control flow\n- pandas & data analysis\n- NumPy, Matplotlib\n- File handling\n- Installation & setup',
 };
 
 function getAIResponse(q: string): string {
@@ -77,7 +78,7 @@ function getAIResponse(q: string): string {
   for (const [key, resp] of Object.entries(AI_KB)) {
     if (key !== 'default' && lower.includes(key)) return resp;
   }
-  if (lower.includes('operator') || lower.includes('arithmetic')) return 'Python **operators**:\n• Arithmetic: `+`, `-`, `*`, `/`, `//` (floor div), `%` (mod), `**` (power)\n• Comparison: `==`, `!=`, `<`, `>`, `<=`, `>=`\n• Logical: `and`, `or`, `not`\n• Assignment: `=`, `+=`, `-=`, `*=`\n\nExample: `per_capita = total_gdp / population`';
+  if (lower.includes('operator') || lower.includes('arithmetic')) return 'Python **operators**:\n- Arithmetic: `+`, `-`, `*`, `/`, `//` (floor div), `%` (mod), `**` (power)\n- Comparison: `==`, `!=`, `<`, `>`, `<=`, `>=`\n- Logical: `and`, `or`, `not`\n- Assignment: `=`, `+=`, `-=`, `*=`\n\nExample: `per_capita = total_gdp / population`';
   if (lower.includes('best practice') || lower.includes('pep')) return 'Python **best practices** for government work:\n1. Use virtual environments: `python -m venv myenv`\n2. Maintain `requirements.txt`\n3. Write docstrings for every function\n4. Use meaningful, statistical variable names\n5. Version control with Git\n6. Follow PEP 8 style guide\n7. Add type hints for clarity';
   return AI_KB['default'];
 }
@@ -110,10 +111,19 @@ export default function CoursePage() {
     }, 600 + Math.random() * 600);
   };
 
+  const TABS = [
+    { id: 'video', label: 'Video Lecture', icon: PlayCircle },
+    { id: 'transcript', label: 'Transcript', icon: FileText },
+    { id: 'quiz', label: 'Quiz', icon: CheckSquare },
+    { id: 'doubts', label: 'Ask Doubts', icon: MessageSquare },
+  ] as const;
+
   return (
     <div>
       <div className={styles.courseHeader}>
-        <Link href="/dashboard/learn" className={styles.backLink}>← Back to Learning Path</Link>
+        <Link href="/dashboard/learn" className={styles.backLink}>
+          <ArrowLeft size={14} /> Back to Learning Path
+        </Link>
         <h1 className={styles.courseTitle}>{COURSE.title}</h1>
         <p className={styles.courseDesc}>{COURSE.description}</p>
         <div className={styles.courseTags}>
@@ -125,8 +135,15 @@ export default function CoursePage() {
       </div>
 
       <div className={styles.tabNav}>
-        {([['video','▶ Video Lecture'],['transcript','📄 Transcript'],['quiz','📝 Quiz'],['doubts','💬 Ask Doubts']] as const).map(([id, label]) => (
-          <button key={id} className={`${styles.tab} ${activeTab === id ? styles.tabActive : ''}`} onClick={() => setActiveTab(id as any)}>{label}</button>
+        {TABS.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            className={`${styles.tab} ${activeTab === id ? styles.tabActive : ''}`}
+            onClick={() => setActiveTab(id as any)}
+          >
+            <Icon size={16} />
+            <span>{label}</span>
+          </button>
         ))}
       </div>
 
@@ -134,12 +151,20 @@ export default function CoursePage() {
         {activeTab === 'video' && (
           <div className={styles.videoSection}>
             <div className={styles.videoWrapper}>
-              <iframe src={`https://www.youtube.com/embed/${COURSE.videoId}?list=${COURSE.playlistId}&rel=0`} title={COURSE.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className={styles.videoIframe} />
+              <iframe
+                src={`https://www.youtube.com/embed/${COURSE.videoId}?list=${COURSE.playlistId}&rel=0`}
+                title={COURSE.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className={styles.videoIframe}
+              />
             </div>
             <div className={styles.videoMeta}>
               <div className={styles.topicsList}>
                 <h3>Topics Covered in This Module</h3>
-                <div className={styles.topicChips}>{COURSE.topics.map(t => <span key={t} className={styles.topicChip}>{t}</span>)}</div>
+                <div className={styles.topicChips}>
+                  {COURSE.topics.map(t => <span key={t} className={styles.topicChip}>{t}</span>)}
+                </div>
               </div>
               <div className={styles.courseProgress}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#0F172A', marginBottom: 8 }}>Module Progress</div>
@@ -169,7 +194,9 @@ export default function CoursePage() {
           <div className={styles.quizSection}>
             {!quizStarted ? (
               <div className={styles.quizStart}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>📝</div>
+                <div style={{ display: 'inline-flex', padding: 12, borderRadius: '50%', background: '#F1F5F9', color: '#003087', marginBottom: 12 }}>
+                  <CheckSquare size={32} />
+                </div>
                 <h3>Generate Knowledge Assessment</h3>
                 <p>StatPath AI will generate a {QUIZ.length}-question assessment from the module transcript to evaluate your Python comprehension.</p>
                 <button className="btn btn-primary" onClick={() => setQuizStarted(true)}>Generate {QUIZ.length}-Question Quiz</button>
@@ -207,7 +234,9 @@ export default function CoursePage() {
                   const ok = quizAnswers[qi] === q.correctIndex;
                   return (
                     <div key={qi} className={`${styles.quizQuestion} ${ok ? styles.qqCorrectBg : styles.qqWrongBg}`}>
-                      <div className={styles.qqNum} style={{ background: ok ? '#16a34a' : '#dc2626' }}>{ok ? '✓' : '✕'}</div>
+                      <div className={styles.qqNum} style={{ background: ok ? '#16a34a' : '#dc2626' }}>
+                        {ok ? <Check size={14} /> : <X size={14} />}
+                      </div>
                       <div className={styles.qqText}>{q.question}</div>
                       <div style={{ fontSize: 13, marginTop: 8 }}>
                         {!ok && <div style={{ color: '#991B1B', fontWeight: 600 }}>Your answer: {q.options[quizAnswers[qi]]}</div>}
@@ -232,7 +261,9 @@ export default function CoursePage() {
             <div className={styles.chatBody}>
               {chatMessages.length === 0 && (
                 <div className={styles.chatEmpty}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>🤖</div>
+                  <div style={{ display: 'inline-flex', padding: 12, borderRadius: '50%', background: '#F1F5F9', color: '#003087', marginBottom: 10 }}>
+                    <Bot size={28} />
+                  </div>
                   <div style={{ fontWeight: 700, fontSize: 14, color: '#334155' }}>AI Tutor — Ready</div>
                   <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 4 }}>Ask about variables, data types, pandas, functions, loops, or any Python concept.</div>
                   <div className={styles.suggestedQuestions}>
@@ -244,7 +275,9 @@ export default function CoursePage() {
               )}
               {chatMessages.map((msg, i) => (
                 <div key={i} className={`${styles.chatMsg} ${msg.role === 'user' ? styles.chatUser : styles.chatAi}`}>
-                  <div className={styles.chatAvatar}>{msg.role === 'user' ? (user?.name?.[0] || 'U') : '🤖'}</div>
+                  <div className={styles.chatAvatar}>
+                    {msg.role === 'user' ? (user?.name?.[0] || 'U') : <Bot size={16} />}
+                  </div>
                   <div className={styles.chatBubble}>
                     <div className={styles.chatRole}>{msg.role === 'user' ? (user?.name || 'You') : 'StatPath AI Tutor'}</div>
                     <div className={styles.chatText}>{msg.content.split('\n').map((l, li) => <span key={li}>{l}<br /></span>)}</div>
@@ -253,7 +286,7 @@ export default function CoursePage() {
               ))}
               {isAiTyping && (
                 <div className={`${styles.chatMsg} ${styles.chatAi}`}>
-                  <div className={styles.chatAvatar}>🤖</div>
+                  <div className={styles.chatAvatar}><Bot size={16} /></div>
                   <div className={styles.chatBubble}><div className={styles.chatRole}>StatPath AI Tutor</div><div className={styles.typingIndicator}><span /><span /><span /></div></div>
                 </div>
               )}
@@ -261,7 +294,9 @@ export default function CoursePage() {
             </div>
             <div className={styles.chatInput}>
               <input type="text" placeholder="Type your question..." value={chatInput} onChange={e => setChatInput(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }}} className="form-input" style={{ flex: 1 }} />
-              <button className="btn btn-primary" onClick={sendMessage} disabled={!chatInput.trim() || isAiTyping}>Send</button>
+              <button className="btn btn-primary" onClick={sendMessage} disabled={!chatInput.trim() || isAiTyping}>
+                <Send size={14} style={{ marginRight: 4 }} /> Send
+              </button>
             </div>
           </div>
         )}
