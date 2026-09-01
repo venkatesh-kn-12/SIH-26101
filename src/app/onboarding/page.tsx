@@ -143,11 +143,11 @@ export default function OnboardingPage() {
               <div className={styles.welcomeEmoji} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Landmark size={36} color="#003087" />
               </div>
-              <h1>Official Cadre Intake Portal</h1>
-              <p>Welcome to the StatPath AI Baseline Intake. Completing this structured profile establishes your baseline competency framework mapped to official MoSPI role standards.</p>
+              <h1>Professional Onboarding & Intake</h1>
+              <p>Welcome to the StatPath AI Baseline Intake. Completing this structured profile establishes your baseline competency framework mapped to official role standards across your domain.</p>
               <div className={styles.welcomePoints}>
                 {[
-                  'Official baseline competency framework mapped to Ministry role standards',
+                  'Adaptive baseline competency framework mapped to professional standards',
                   'Identification of domain skill gaps aligned with Mission Karmayogi',
                   'Personalized learning pathways directly integrated with iGOT modules'
                 ].map(p => (
@@ -159,11 +159,11 @@ export default function OnboardingPage() {
 
           {step === 1 && (
             <div>
-              <h2 className={styles.stepTitle}>Professional & Cadre Information</h2>
-              <p className={styles.stepSubtitle}>Specify your years of experience and educational background (All fields mandatory).</p>
+              <h2 className={styles.stepTitle}>Professional & Academic Background</h2>
+              <p className={styles.stepSubtitle}>Specify your years of experience and educational qualification (All fields mandatory).</p>
 
               <div className="form-group">
-                <label className="form-label">Years of Experience in Official Statistics <span style={{ color: '#C8102E' }}>*</span></label>
+                <label className="form-label">Years of Professional Experience <span style={{ color: '#C8102E' }}>*</span></label>
                 <select className="form-select" value={data.experience} onChange={e => setData({ ...data, experience: e.target.value })} required>
                   <option value="">Select Experience Range</option>
                   {EXPERIENCE_RANGES.map(v => <option key={v}>{v}</option>)}
@@ -183,7 +183,7 @@ export default function OnboardingPage() {
                   <label className="form-label">Specify Educational Qualification <span style={{ color: '#C8102E' }}>*</span></label>
                   <input
                     className="form-input"
-                    placeholder="e.g. M.Stat / M.A. Econometrics / Post Graduate Diploma..."
+                    placeholder="e.g. B.Tech / B.A. / M.Sc. / Post Graduate Diploma / CA..."
                     value={educationOther}
                     onChange={e => setEducationOther(e.target.value)}
                     required
@@ -195,15 +195,15 @@ export default function OnboardingPage() {
 
           {step === 2 && (
             <div>
-              <h2 className={styles.stepTitle}>Prior Training & Online Courses</h2>
-              <p className={styles.stepSubtitle}>Detail your completed training programmes from online learning portals.</p>
+              <h2 className={styles.stepTitle}>Prior Training & Domain Skills</h2>
+              <p className={styles.stepSubtitle}>Detail your completed training programmes, online courses, and key technical/functional skills.</p>
 
               <div className="form-group">
-                <label className="form-label">Online Courses Completed <span style={{ color: '#C8102E' }}>*</span></label>
+                <label className="form-label">Completed Courses & Key Skills <span style={{ color: '#C8102E' }}>*</span></label>
                 <textarea
                   className="form-input"
                   rows={4}
-                  placeholder="e.g. Statistical Literacy, Data Cleaning with Python, Survey Sampling Methodology..."
+                  placeholder="e.g. Data Analytics with Python, Project Management, Public Policy, Financial Modeling, Machine Learning..."
                   value={data.completedCourses}
                   onChange={e => setData({ ...data, completedCourses: e.target.value })}
                   style={{ resize: 'vertical' }}
@@ -215,7 +215,7 @@ export default function OnboardingPage() {
 
           {step === 3 && (
             <div>
-              <h2 className={styles.stepTitle}>Career Progression Targets</h2>
+              <h2 className={styles.stepTitle}>Career Progression & Target Goals</h2>
               <p className={styles.stepSubtitle}>Enter your target career role to benchmark advanced competency requirements (Mandatory).</p>
 
               <div className="form-group">
@@ -223,7 +223,7 @@ export default function OnboardingPage() {
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="e.g. Deputy Director (DES), Senior Statistical Officer"
+                  placeholder="e.g. Lead Data Scientist, Deputy Director, Project Lead, Senior Manager..."
                   value={data.careerGoal}
                   onChange={e => setData({ ...data, careerGoal: e.target.value })}
                   required
@@ -232,7 +232,7 @@ export default function OnboardingPage() {
 
               {data.careerGoal && (
                 <div className={styles.careerConfirm}>
-                  Your custom learning path will be configured for <strong>{data.careerGoal}</strong>.
+                  Your custom learning resources will be configured for <strong>{data.careerGoal}</strong>.
                 </div>
               )}
             </div>

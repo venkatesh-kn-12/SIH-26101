@@ -1,213 +1,511 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { COMPETENCY_SCORES, DEMO_USER } from '@/lib/mockData';
 import { getCurrentUser, UserProfile } from '@/lib/authStorage';
-import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
+import { analyzeSkillGap } from '@/lib/skillGapService';
+import { buildUserLearningProfile, UserLearningProfile } from '@/lib/competencyService';
+import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { ShieldCheck, Target, Award, Sparkles, BookOpen, CheckCircle, AlertTriangle, ArrowRight, Brain, Zap, History, Clock } from 'lucide-react';
 import styles from './competency.module.css';
 
-const GAP_COLOR = { none: '#22c55e', low: '#84cc16', medium: '#f97316', high: '#ef4444' };
+const GAP_COLOR = {
+  mastered: '#22c55e',
+  developing: '#f59e0b',
+  gap: '#ef4444'
+};
+
+interface DetailedCompetencyItem {
+  id: string;
+  name: string;
+  category: 'Technical Execution' | 'Applied Practice' | 'Strategic & Leadership' | 'Domain Fundamentals';
+  currentScore: number; // 1.0 to 5.0
+  targetScore: number;  // 4.0 to 5.0
+  status: 'Mastered & Verified' | 'Developing' | 'Target Skill Gap';
+  gapLevel: 'none' | 'low' | 'high';
+  reason: string;
+  recommendedCourseKeyword: string;
+}
 
 export default function CompetencyPage() {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [onboarding, setOnboarding] = useState<{ experience?: string; education?: string; completedCourses?: string; careerGoal?: string }>({});
   const [assessment, setAssessment] = useState<any>(null);
+  const [assessmentHistory, setAssessmentHistory] = useState<any[]>([]);
 
   useEffect(() => {
-    setUser(getCurrentUser());
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
+
     if (typeof window !== 'undefined') {
       try {
-        const stored = localStorage.getItem('statpath_assessment_results');
-        if (stored) setAssessment(JSON.parse(stored));
+        const storedOnboarding = localStorage.getItem('statpath_onboarding_data');
+        if (storedOnboarding) {
+          setOnboarding(JSON.parse(storedOnboarding));
+        }
+
+        const storedAssessment = localStorage.getItem('statpath_assessment_results');
+        if (storedAssessment) {
+          setAssessment(JSON.parse(storedAssessment));
+        }
+
+        const storedHistory = localStorage.getItem('statpath_assessment_history');
+        if (storedHistory) {
+          setAssessmentHistory(JSON.parse(storedHistory));
+        }
       } catch (e) {
         console.error(e);
       }
     }
   }, []);
 
-  const isDemo = !user || user.empId === DEMO_USER.employeeId;
+  // Build Structured Learning Profile (Aggregating multi-source evidence)
+  const userLearningProfile: UserLearningProfile = useMemo(() => {
+    return buildUserLearningProfile(user, onboarding, assessment, {});
+  }, [user, onboarding, assessment]);
 
-  const categories = [...new Set(COMPETENCY_SCORES.map(c => c.category))];
+  // Combined Knowledge Evidence Log (Historical Evidence Trail)
+  const evidenceLogList = useMemo(() => {
+    const log: Array<{
+      id: string;
+      title: string;
+      evidenceType: 'diagnostic_exam' | 'assessment' | 'course_quiz' | 'self_reported';
+      competency: string;
+      score: number;
+      completedAt: string;
+      level: string;
+    }> = [];
 
-  const radarData = isDemo
-    ? COMPETENCY_SCORES.slice(0, 7).map(c => ({
-        subject: c.name.length > 12 ? c.name.substring(0, 11) + '…' : c.name,
-        current: (c.current / 5) * 100,
-        required: (c.required / 5) * 100,
-      }))
-    : (assessment?.topicDetails
-        ? assessment.topicDetails.map((tItem: any) => ({
-            subject: tItem.topic,
-            current: tItem.isCorrect ? 100 : tItem.isAnswered ? 35 : 0,
-            required: 80
-          }))
-        : []);
+    // Add entries from stored history
+    assessmentHistory.forEach((h, idx) => {
+      log.push({
+        id: h.id || `hist-${idx}`,
+        title: h.title || 'Domain Assessment Test',
+        evidenceType: h.evidenceType || 'assessment',
+        competency: h.competency || 'Domain Skill',
+        score: h.score || 80,
+        completedAt: h.completedAt || new Date().toISOString(),
+        level: h.score >= 88 ? 'Expert' : h.score >= 71 ? 'Advanced' : h.score >= 45 ? 'Intermediate' : 'Beginner'
+      });
+    });
+
+    // Add baseline diagnostic intake evidence
+    if (assessment) {
+      log.push({
+        id: 'baseline-diag',
+        title: 'Adaptive Baseline Diagnostic Assessment',
+        evidenceType: 'diagnostic_exam',
+        competency: 'Baseline Competency Framework',
+        score: assessment.score || 70,
+        completedAt: assessment.completedAt || new Date().toISOString(),
+        level: assessment.score >= 88 ? 'Expert' : assessment.score >= 71 ? 'Advanced' : assessment.score >= 45 ? 'Intermediate' : 'Beginner'
+      });
+    }
+
+    // Add claimed courses intake evidence
+    if (onboarding.completedCourses) {
+      onboarding.completedCourses.split(',').forEach((c, idx) => {
+        log.push({
+          id: `claimed-${idx}`,
+          title: `Prior Training & Experience (${c.trim()})`,
+          evidenceType: 'self_reported',
+          competency: c.trim(),
+          score: 65,
+          completedAt: new Date().toISOString(),
+          level: 'Intermediate'
+        });
+      });
+    }
+
+    return log;
+  }, [assessmentHistory, assessment, onboarding]);
+
+  // DYNAMIC DEDICATED COMPETENCY MAP GENERATOR
+  const competencyAnalysis = useMemo(() => {
+    const targetGoal = onboarding.careerGoal || 'Data Scientist';
+    const claimedCoursesRaw = onboarding.completedCourses || 'Professional Fundamentals';
+    const claimedList = claimedCoursesRaw.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    const expRange = onboarding.experience || '1-3 years';
+
+    const skillGapResult = analyzeSkillGap({
+      career_goal: targetGoal,
+      current_skills: claimedList,
+      current_level: expRange.includes('5') || expRange.includes('10') ? 'Intermediate' : 'Beginner'
+    });
+
+    const competencies: DetailedCompetencyItem[] = [];
+
+    // Known / Verified Skills
+    claimedList.forEach((skill, idx) => {
+      const isVerifiedInAssessment = assessment?.topicDetails?.some(
+        (t: any) => t.isCorrect && (t.topic.toLowerCase().includes(skill.toLowerCase()) || t.competency.toLowerCase().includes(skill.toLowerCase()))
+      );
+
+      competencies.push({
+        id: `known-${idx}`,
+        name: skill,
+        category: 'Technical Execution',
+        currentScore: isVerifiedInAssessment ? 4.8 : 4.2,
+        targetScore: 5.0,
+        status: 'Mastered & Verified',
+        gapLevel: 'none',
+        reason: isVerifiedInAssessment
+          ? `Verified via assessment and self-reported intake (${skill}).`
+          : `Claimed completed training & practical experience (${skill}).`,
+        recommendedCourseKeyword: skill
+      });
+    });
+
+    // Assessment Verified Topics
+    if (assessment?.topicDetails) {
+      assessment.topicDetails.forEach((tItem: any, idx: number) => {
+        const existing = competencies.find(c => c.name.toLowerCase() === tItem.topic.toLowerCase() || c.name.toLowerCase() === tItem.competency.toLowerCase());
+        if (!existing) {
+          if (tItem.isCorrect) {
+            competencies.push({
+              id: `assess-${idx}`,
+              name: tItem.competency || tItem.topic,
+              category: 'Applied Practice',
+              currentScore: 4.5,
+              targetScore: 5.0,
+              status: 'Mastered & Verified',
+              gapLevel: 'none',
+              reason: `Passed diagnostic baseline assessment question on "${tItem.topic}".`,
+              recommendedCourseKeyword: tItem.recommendedCourseKeyword || tItem.topic
+            });
+          }
+        }
+      });
+    }
+
+    // Target Skill Gaps
+    skillGapResult.skill_gaps.forEach((gapSkill, idx) => {
+      const alreadyHas = competencies.some(c => c.name.toLowerCase() === gapSkill.toLowerCase());
+      if (!alreadyHas) {
+        competencies.push({
+          id: `gap-${idx}`,
+          name: gapSkill,
+          category: gapSkill.toLowerCase().includes('leadership') || gapSkill.toLowerCase().includes('management') || gapSkill.toLowerCase().includes('governance')
+            ? 'Strategic & Leadership'
+            : 'Domain Fundamentals',
+          currentScore: 1.5,
+          targetScore: 4.5,
+          status: 'Target Skill Gap',
+          gapLevel: 'high',
+          reason: `Required competency gap to qualify for target career goal "${targetGoal}".`,
+          recommendedCourseKeyword: gapSkill
+        });
+      }
+    });
+
+    if (competencies.length < 6) {
+      const defaultDomain = [
+        { name: 'Data Governance & Ethics', cat: 'Strategic & Leadership', score: 3.2, gap: 'low' },
+        { name: 'Quality Standards & SLAs', cat: 'Applied Practice', score: 3.5, gap: 'low' },
+        { name: 'Digital Transformation', cat: 'Strategic & Leadership', score: 2.0, gap: 'high' }
+      ];
+
+      defaultDomain.forEach((d, idx) => {
+        if (!competencies.some(c => c.name === d.name)) {
+          competencies.push({
+            id: `def-${idx}`,
+            name: d.name,
+            category: d.cat as any,
+            currentScore: d.score,
+            targetScore: 4.5,
+            status: d.gap === 'low' ? 'Developing' : 'Target Skill Gap',
+            gapLevel: d.gap as any,
+            reason: `Standard competency required for ${onboarding.education || 'Professional Advancement'}.`,
+            recommendedCourseKeyword: d.name.split(' ')[0]
+          });
+        }
+      });
+    }
+
+    const radarData = competencies.slice(0, 8).map(c => ({
+      subject: c.name.length > 14 ? `${c.name.slice(0, 13)}…` : c.name,
+      current: Math.round((c.currentScore / 5) * 100),
+      required: Math.round((c.targetScore / 5) * 100),
+      fullName: c.name
+    }));
+
+    const masteredCount = competencies.filter(c => c.status === 'Mastered & Verified').length;
+    const developingCount = competencies.filter(c => c.status === 'Developing').length;
+    const gapCount = competencies.filter(c => c.status === 'Target Skill Gap').length;
+
+    return {
+      targetGoal,
+      claimedCoursesRaw,
+      competencies,
+      radarData,
+      masteredCount,
+      developingCount,
+      gapCount,
+      totalCount: competencies.length
+    };
+  }, [onboarding, assessment]);
 
   return (
     <div>
+      {/* Header */}
       <div className={styles.pageHeader}>
         <div>
-          <h1 className={styles.title}>Competency Digital Twin</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+            <h1 className={styles.title} style={{ margin: 0 }}>Dynamic Competency Map & Skill Twin</h1>
+            <span style={{ background: '#EEF2FF', color: '#4F46E5', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 12, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <Sparkles size={12} color="#FF9933" /> Role & Skill Personalized
+            </span>
+          </div>
           <p className={styles.subtitle}>
-            Your verified competency profile — derived from official assessment diagnostics and domain intake.
+            Directly mapping <strong>what you already know</strong> ({competencyAnalysis.claimedCoursesRaw}) against <strong>what you need</strong> to become a <strong>{competencyAnalysis.targetGoal}</strong>.
           </p>
         </div>
         <div className={styles.lastUpdated}>
-          {assessment ? `Last Assessed: ${new Date(assessment.completedAt).toLocaleDateString('en-IN')}` : `Date: ${new Date().toLocaleDateString('en-IN')}`}
+          Role Goal: <strong>{competencyAnalysis.targetGoal}</strong>
         </div>
       </div>
 
-      {!isDemo && !assessment && (
-        <div className="card" style={{ marginBottom: 24, padding: 24, textAlign: 'center', background: '#F8FAFC', border: '1px dashed #CBD5E1' }}>
-          <div style={{ fontSize: 36, marginBottom: 10 }}>📊</div>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0F172A' }}>Baseline Assessment Pending</h2>
-          <p style={{ fontSize: 13, color: '#64748B', maxWidth: 600, margin: '6px auto 18px auto' }}>
-            As a newly registered officer, your digital twin competency scores will populate immediately upon completing your 15-minute baseline intake assessment.
-          </p>
-          <Link href="/onboarding/assessment" className="btn btn-primary">
-            Initiate Baseline Assessment Now →
-          </Link>
-        </div>
-      )}
-
-      {/* Summary Bands */}
+      {/* Overview Stat Cards */}
       <div className={styles.bands}>
-        {[
-          {
-            label: 'Verified Strengths',
-            icon: '💪',
-            items: isDemo ? COMPETENCY_SCORES.filter(c => c.gap === 'none') : (assessment ? assessment.topicDetails.filter((t: any) => t.isCorrect) : []),
-            color: '#22c55e'
-          },
-          {
-            label: 'Priority Gaps',
-            icon: '🎯',
-            items: isDemo ? COMPETENCY_SCORES.filter(c => c.gap === 'high') : (assessment ? assessment.topicDetails.filter((t: any) => t.isAnswered && !t.isCorrect) : []),
-            color: '#ef4444'
-          },
-          {
-            label: 'Unanswered Sections',
-            icon: '⚡',
-            items: isDemo ? COMPETENCY_SCORES.filter(c => c.gap === 'medium') : (assessment ? assessment.topicDetails.filter((t: any) => !t.isAnswered) : []),
-            color: '#f97316'
-          },
-        ].map(band => (
-          <div key={band.label} className={`card ${styles.band}`} style={{ borderTop: `4px solid ${band.color}` }}>
-            <div className={styles.bandHeader}>
-              <span>{band.icon}</span>
-              <span className={styles.bandLabel} style={{ color: band.color }}>{band.label}</span>
-            </div>
-            <div className={styles.bandCount} style={{ color: band.color }}>{band.items.length}</div>
-            <div className={styles.bandItems}>
-              {band.items.map((i: any) => (
-                <span key={i.id || i.topic || i.name} className={styles.bandItem}>
-                  {i.topic || i.name}
-                </span>
-              ))}
-            </div>
+        <div className={`card ${styles.band}`} style={{ borderTop: `4px solid ${GAP_COLOR.mastered}` }}>
+          <div className={styles.bandHeader}>
+            <CheckCircle size={18} color={GAP_COLOR.mastered} />
+            <span className={styles.bandLabel} style={{ color: GAP_COLOR.mastered }}>What You Know (Verified)</span>
           </div>
-        ))}
-      </div>
-
-      <div className={styles.twoCol}>
-        {/* Radar */}
-        <div className={`card ${styles.section}`}>
-          <div className="section-title" style={{ marginBottom: 16 }}>Competency Radar</div>
-          {radarData.length > 0 ? (
-            <div style={{ height: 300 }}>
-              <ResponsiveContainer>
-                <RadarChart data={radarData}>
-                  <PolarGrid stroke="#e2e8f0" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: '#64748b' }} />
-                  <Radar name="Required Target" dataKey="required" stroke="#e2e8f0" fill="#f1f5f9" fillOpacity={0.6} />
-                  <Radar name="Current Accuracy" dataKey="current" stroke="#003087" fill="#003087" fillOpacity={0.35} />
-                  <Legend formatter={(v) => <span style={{ fontSize: 12, color: '#64748b' }}>{v}</span>} />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <div style={{ padding: '60px 20px', textAlign: 'center', color: '#64748B', fontStyle: 'italic' }}>
-              Take your baseline assessment to plot your competency radar.
-            </div>
-          )}
+          <div className={styles.bandCount} style={{ color: GAP_COLOR.mastered }}>{competencyAnalysis.masteredCount}</div>
+          <div style={{ fontSize: 12, color: '#64748B' }}>Mastered Competencies</div>
         </div>
 
-        {/* Timeline */}
+        <div className={`card ${styles.band}`} style={{ borderTop: `4px solid ${GAP_COLOR.developing}` }}>
+          <div className={styles.bandHeader}>
+            <Zap size={18} color={GAP_COLOR.developing} />
+            <span className={styles.bandLabel} style={{ color: GAP_COLOR.developing }}>Developing Skills</span>
+          </div>
+          <div className={styles.bandCount} style={{ color: GAP_COLOR.developing }}>{competencyAnalysis.developingCount}</div>
+          <div style={{ fontSize: 12, color: '#64748B' }}>Intermediate Baseline</div>
+        </div>
+
+        <div className={`card ${styles.band}`} style={{ borderTop: `4px solid ${GAP_COLOR.gap}` }}>
+          <div className={styles.bandHeader}>
+            <Target size={18} color={GAP_COLOR.gap} />
+            <span className={styles.bandLabel} style={{ color: GAP_COLOR.gap }}>What You Need (Role Gaps)</span>
+          </div>
+          <div className={styles.bandCount} style={{ color: GAP_COLOR.gap }}>{competencyAnalysis.gapCount}</div>
+          <div style={{ fontSize: 12, color: '#64748B' }}>Gaps for {competencyAnalysis.targetGoal}</div>
+        </div>
+      </div>
+
+      {/* Two Column Layout: Radar & Role Progression */}
+      <div className={styles.twoCol} style={{ marginBottom: 24 }}>
+        {/* Radar Chart */}
         <div className={`card ${styles.section}`}>
-          <div className="section-title" style={{ marginBottom: 4 }}>Skill Progression Timeline</div>
-          <div className="section-subtitle" style={{ marginBottom: 16 }}>Track how your competencies evolve over time</div>
-          <div style={{ height: 300 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <div className="section-title" style={{ margin: 0 }}>Competency Radar (Known vs Needed)</div>
+            <span style={{ fontSize: 11, background: '#F1F5F9', color: '#475569', padding: '2px 8px', borderRadius: 8, fontWeight: 600 }}>
+              {competencyAnalysis.radarData.length} Key Competency Axes
+            </span>
+          </div>
+
+          <div style={{ height: 320 }}>
             <ResponsiveContainer>
-              <LineChart data={isDemo ? COMPETENCY_SCORES[4].timeline : [{ month: 'Day 1', score: assessment ? assessment.score / 20 : 0 }]}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis domain={[0, 5]} tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v: any) => [`${v}/5`, 'Competency Score']} />
-                <Line type="monotone" dataKey="score" stroke="#003087" strokeWidth={2} dot={{ fill: '#003087', r: 5 }} />
-              </LineChart>
+              <RadarChart data={competencyAnalysis.radarData}>
+                <PolarGrid stroke="#e2e8f0" />
+                <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: '#334155', fontWeight: 600 }} />
+                <Radar name={`Required for ${competencyAnalysis.targetGoal}`} dataKey="required" stroke="#94A3B8" fill="#F1F5F9" fillOpacity={0.5} />
+                <Radar name="What You Already Know & Mastered" dataKey="current" stroke="#003087" fill="#003087" fillOpacity={0.4} />
+                <Legend formatter={(v) => <span style={{ fontSize: 12, color: '#334155', fontWeight: 600 }}>{v}</span>} />
+                <Tooltip formatter={(value: any, name: any, props: any) => [`${value}% Proficiency`, props.payload.fullName]} />
+              </RadarChart>
             </ResponsiveContainer>
           </div>
-          <div className={styles.timelineNote}>
-            Status: <strong style={{ color: '#003087' }}>{assessment ? `Baseline Score Verified: ${assessment.scoreFormatted}` : 'Intake Established'}</strong>
+        </div>
+
+        {/* Role Target Readiness Summary */}
+        <div className={`card ${styles.section}`}>
+          <div className="section-title" style={{ marginBottom: 4 }}>Target Role Readiness Diagnostic</div>
+          <div className="section-subtitle" style={{ marginBottom: 16 }}>
+            Personalized alignment for target career role <strong>"{competencyAnalysis.targetGoal}"</strong>
           </div>
+
+          <div style={{ background: '#F8FAFC', padding: 16, borderRadius: 12, border: '1px solid #E2E8F0', marginBottom: 16 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+              <span>Target Role Readiness Score</span>
+              <span style={{ color: '#003087' }}>
+                {Math.round((competencyAnalysis.masteredCount / (competencyAnalysis.totalCount || 1)) * 100)}% Match
+              </span>
+            </div>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${Math.round((competencyAnalysis.masteredCount / (competencyAnalysis.totalCount || 1)) * 100)}%` }} />
+            </div>
+            <p style={{ fontSize: 12, color: '#64748B', marginTop: 8, margin: 0 }}>
+              Based on your declared background ({onboarding.education || 'Higher Education'}, {onboarding.experience || 'Experience'}) and claimed skills.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13 }}>
+              <CheckCircle size={16} color="#22c55e" style={{ marginTop: 2, flexShrink: 0 }} />
+              <div>
+                <strong>Strengths Leveraged:</strong> You have strong foundational proficiency in <span>{competencyAnalysis.claimedCoursesRaw}</span>.
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13 }}>
+              <Target size={16} color="#ef4444" style={{ marginTop: 2, flexShrink: 0 }} />
+              <div>
+                <strong>Key Focus Areas Needed:</strong> Close the {competencyAnalysis.gapCount} identified skill gaps to qualify for {competencyAnalysis.targetGoal}.
+              </div>
+            </div>
+          </div>
+
+          <Link href="/dashboard/learn" className="btn btn-primary" style={{ width: '100%', marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <BookOpen size={16} /> Open Recommended Learning Resources →
+          </Link>
         </div>
       </div>
 
-      {/* Competency Map */}
-      {isDemo ? (
-        <div className={`card ${styles.section}`} style={{ marginTop: 20 }}>
-          <div className="section-title" style={{ marginBottom: 16 }}>Complete Competency Map</div>
-          {categories.map(cat => (
-            <div key={cat} className={styles.catSection}>
-              <div className={styles.catTitle}>{cat}</div>
-              <div className={styles.compGrid}>
-                {COMPETENCY_SCORES.filter(c => c.category === cat).map(c => (
-                  <div key={c.id} className={styles.compCard}>
-                    <div className={styles.compHeader}>
-                      <span className={styles.compName}>{c.name}</span>
-                      <span className={styles.compGap} style={{ color: GAP_COLOR[c.gap] }}>
-                        {c.gap === 'none' ? '✓ Met' : `${c.gap.charAt(0).toUpperCase() + c.gap.slice(1)} Gap`}
+      {/* NEW: USER KNOWLEDGE & LEARNING EVIDENCE LOG */}
+      <div className={`card ${styles.section}`} style={{ marginBottom: 24, borderTop: '4px solid #003087' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <div>
+            <div className="section-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <History size={20} color="#003087" /> User Knowledge & Learning Evidence Log
+            </div>
+            <div className="section-subtitle" style={{ margin: '2px 0 0 0' }}>
+              Structured audit trail of all assessment tests, diagnostic exams, and quizzes completed by the user
+            </div>
+          </div>
+          <span style={{ fontSize: 12, background: '#EFF6FF', color: '#1E40AF', padding: '4px 12px', borderRadius: 12, fontWeight: 700 }}>
+            {evidenceLogList.length} Verified Evidence Entries
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {evidenceLogList.map((logItem) => {
+            const isDiagnostic = logItem.evidenceType === 'diagnostic_exam';
+            const isAssessment = logItem.evidenceType === 'assessment';
+            const isQuiz = logItem.evidenceType === 'course_quiz';
+
+            return (
+              <div key={logItem.id} style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '14px 18px',
+                background: '#F8FAFC',
+                borderRadius: 12,
+                border: '1px solid #E2E8F0',
+                flexWrap: 'wrap',
+                gap: 12
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                  <div style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 10,
+                    background: isDiagnostic ? '#FEF3C7' : isAssessment ? '#DBEAFE' : '#DCFCE7',
+                    color: isDiagnostic ? '#B45309' : isAssessment ? '#1E40AF' : '#15803D',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 800,
+                    fontSize: 16
+                  }}>
+                    {isDiagnostic ? '🩺' : isAssessment ? '📝' : '⚡'}
+                  </div>
+
+                  <div>
+                    <div style={{ fontWeight: 800, fontSize: 14, color: '#0F172A' }}>{logItem.title}</div>
+                    <div style={{ fontSize: 12, color: '#64748B', display: 'flex', alignItems: 'center', gap: 8, marginTop: 2 }}>
+                      <span>Competency: <strong>{logItem.competency}</strong></span>
+                      <span>•</span>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                        <Clock size={11} /> {new Date(logItem.completedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </span>
                     </div>
-                    <div className={styles.compScores}>
-                      <span>Current: <strong style={{ color: '#003087' }}>{c.current}</strong></span>
-                      <span>Required: <strong>{c.required}</strong></span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span className="badge badge-primary" style={{ background: '#EFF6FF', color: '#1E40AF' }}>
+                    Level: {logItem.level}
+                  </span>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: 16, fontWeight: 900, color: logItem.score >= 70 ? '#22c55e' : '#f59e0b' }}>
+                      {logItem.score}% Score
                     </div>
-                    <div className={styles.compBarWrap}>
-                      <div className={styles.compBarBg}>
-                        <div className={styles.compBarFill} style={{ width: `${(c.current / 5) * 100}%`, background: GAP_COLOR[c.gap] }} />
-                        <div className={styles.compBarReq} style={{ left: `${(c.required / 5) * 100}%` }} />
-                      </div>
+                    <div style={{ fontSize: 11, color: '#64748B', textTransform: 'capitalize' }}>
+                      {logItem.evidenceType.replace('_', ' ')}
                     </div>
                   </div>
-                ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Detailed Competency Matrix Grid */}
+      <div className={`card ${styles.section}`}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <div>
+            <div className="section-title" style={{ margin: 0 }}>Personalized Competency Matrix</div>
+            <div className="section-subtitle" style={{ margin: '2px 0 0 0' }}>
+              Detailed breakdown of your mastered skills vs target role requirements
+            </div>
+          </div>
+          <Link href="/dashboard/profile" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            Update Profile & Skills
+          </Link>
+        </div>
+
+        <div className={styles.compGrid}>
+          {competencyAnalysis.competencies.map(comp => (
+            <div key={comp.id} className={styles.compCard} style={{ borderLeft: `4px solid ${comp.status === 'Mastered & Verified' ? '#22c55e' : comp.status === 'Developing' ? '#f59e0b' : '#ef4444'}` }}>
+              <div className={styles.compHeader}>
+                <span className={styles.compName}>{comp.name}</span>
+                <span className="badge" style={{
+                  background: comp.status === 'Mastered & Verified' ? '#DCFCE7' : comp.status === 'Developing' ? '#FEF3C7' : '#FEE2E2',
+                  color: comp.status === 'Mastered & Verified' ? '#15803D' : comp.status === 'Developing' ? '#92400E' : '#991B1B',
+                  fontWeight: 700
+                }}>
+                  {comp.status}
+                </span>
+              </div>
+
+              <div style={{ fontSize: 12, color: '#64748B', marginBottom: 8 }}>
+                Category: <strong>{comp.category}</strong>
+              </div>
+
+              <div className={styles.compScores}>
+                <span>Current: <strong style={{ color: comp.status === 'Mastered & Verified' ? '#22c55e' : '#003087' }}>{comp.currentScore.toFixed(1)} / 5.0</strong></span>
+                <span>Role Target: <strong>{comp.targetScore.toFixed(1)} / 5.0</strong></span>
+              </div>
+
+              <div className={styles.compBarWrap}>
+                <div className={styles.compBarBg}>
+                  <div className={styles.compBarFill} style={{
+                    width: `${(comp.currentScore / 5) * 100}%`,
+                    background: comp.status === 'Mastered & Verified' ? '#22c55e' : comp.status === 'Developing' ? '#f59e0b' : '#ef4444'
+                  }} />
+                  <div className={styles.compBarReq} style={{ left: `${(comp.targetScore / 5) * 100}%` }} />
+                </div>
+              </div>
+
+              <div style={{ fontSize: 12, color: '#475569', marginTop: 10, fontStyle: 'italic', background: '#F8FAFC', padding: '6px 10px', borderRadius: 6 }}>
+                💡 {comp.reason}
               </div>
             </div>
           ))}
         </div>
-      ) : assessment ? (
-        <div className={`card ${styles.section}`} style={{ marginTop: 20 }}>
-          <div className="section-title" style={{ marginBottom: 16 }}>Assessment Topic Diagnostics Map</div>
-          <div className={styles.compGrid}>
-            {assessment.topicDetails?.map((tItem: any) => (
-              <div key={tItem.id} className={styles.compCard}>
-                <div className={styles.compHeader}>
-                  <span className={styles.compName}>{tItem.topic}</span>
-                  <span className="badge" style={{ background: tItem.isCorrect ? '#DCFCE7' : '#FEE2E2', color: tItem.isCorrect ? '#15803D' : '#991B1B' }}>
-                    {tItem.status}
-                  </span>
-                </div>
-                <div className={styles.compScores}>
-                  <span>Domain: <strong>{tItem.competency}</strong></span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
+      </div>
 
-      <div className={styles.actions}>
-        <Link href="/dashboard/learn" className="btn btn-primary">View Learning Path for My Gaps →</Link>
-        <Link href="/dashboard/career" className="btn btn-secondary">Simulate Career Change</Link>
+      {/* Action Bar */}
+      <div className={styles.actions} style={{ marginTop: 24 }}>
+        <Link href="/dashboard/learn" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <BookOpen size={16} /> View Recommended Learning Resources for My Gaps →
+        </Link>
+        <Link href="/dashboard/career" className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <Target size={16} /> Simulate Different Target Career Goal
+        </Link>
       </div>
     </div>
   );

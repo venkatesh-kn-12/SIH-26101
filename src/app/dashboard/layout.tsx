@@ -15,7 +15,7 @@ const NAV = [
   { href: '/dashboard', icon: <Home size={18} />, label: 'Overview' },
   { href: '/dashboard/profile', icon: <User size={18} />, label: 'My Profile' },
   { href: '/dashboard/competency', icon: <BarChart3 size={18} />, label: 'Competency Map' },
-  { href: '/dashboard/learn', icon: <BookOpen size={18} />, label: 'Learning Path' },
+  { href: '/dashboard/learn', icon: <BookOpen size={18} />, label: 'Learning Resources' },
   { href: '/dashboard/daily', icon: <Zap size={18} />, label: 'Daily Learning' },
   { href: '/dashboard/assess', icon: <FileText size={18} />, label: 'Assessments' },
   { href: '/dashboard/career', icon: <Target size={18} />, label: 'Career Simulator' },
@@ -35,6 +35,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [onboardingData, setOnboardingData] = useState<any>({});
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const { language, setLanguage } = useLanguage();
 
@@ -42,7 +43,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const user = getCurrentUser();
     setCurrentUser(user);
 
-    // Enforce baseline assessment completion before allowing dashboard access for registered users!
+    if (typeof window !== 'undefined') {
+      try {
+        const storedOb = localStorage.getItem('statpath_onboarding_data');
+        if (storedOb) setOnboardingData(JSON.parse(storedOb));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     if (typeof window !== 'undefined' && user && user.empId !== DEMO_USER.employeeId) {
       const hasAssessed = localStorage.getItem('statpath_assessment_results');
       if (!hasAssessed) {
@@ -59,22 +68,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [router]);
 
   const unread = notifications.filter(n => !n.read).length;
+  const userInitials = currentUser?.name ? currentUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : 'US';
 
-  const userInitials = currentUser?.name
-    ? currentUser.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
-    : 'U';
+  // Dynamic User Domain and Section Title for Top Navbar Breadcrumb
+  const userDomain = onboardingData?.careerGoal || onboardingData?.completedCourses?.split(',')[0]?.trim() || currentUser?.dept || currentUser?.designation || 'Domain Competency';
+
+  const getSectionTitle = (path: string) => {
+    if (path === '/dashboard') return 'Overview';
+    if (path.startsWith('/dashboard/learn')) return 'Learning Resources';
+    if (path.startsWith('/dashboard/competency')) return 'Competency Map';
+    if (path.startsWith('/dashboard/daily')) return 'Daily Learning';
+    if (path.startsWith('/dashboard/assess')) return 'Assessments';
+    if (path.startsWith('/dashboard/career')) return 'Career Simulator';
+    if (path.startsWith('/dashboard/profile')) return 'My Profile';
+    if (path.startsWith('/dashboard/notifications')) return 'Notifications';
+    return 'Dashboard';
+  };
 
   return (
     <div className={styles.layout}>
-      {/* Sidebar (Desktop) */}
+      {/* Sidebar */}
       <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : styles.sidebarCollapsed}`}>
         <div className={styles.sidebarHeader}>
           {sidebarOpen && (
             <Link href="/dashboard" className={styles.sidebarLogo}>
               <StatPathLogo size={36} />
               <div>
-                <div className={styles.logoName}>StatPath AI</div>
-                <div className={styles.logoDept}>Official Statistical System • MoSPI</div>
+                <div className={styles.logoName}>SkillPath AI</div>
+                <div className={styles.logoDept}>Official iGOT Skill Intelligence Platform</div>
               </div>
             </Link>
           )}
@@ -113,7 +134,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <div className={styles.userAvatar}>{userInitials}</div>
               <div>
                 <div className={styles.userName}>{currentUser?.name || 'Registered Officer'}</div>
-                <div className={styles.userRole}>{currentUser?.designation || 'Statistical Official'}</div>
+                <div className={styles.userRole}>{currentUser?.designation || 'Domain Specialist'}</div>
               </div>
             </div>
           )}
@@ -129,69 +150,64 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Top Bar */}
         <header className={styles.topBar}>
           <div className={styles.topBarLeft}>
+            {/* DYNAMIC USER-DOMAIN BREADCRUMB */}
             <div className={styles.breadcrumb}>
-              <span>Official Statistical System (MoSPI)</span>
+              <span style={{ fontWeight: 600, color: '#475569' }}>{userDomain}</span>
               <span className={styles.sep}>/</span>
-              <span style={{ fontWeight: 600, color: 'var(--gov-primary)' }}>Official Portal</span>
+              <span style={{ fontWeight: 700, color: '#003087' }}>{getSectionTitle(pathname)}</span>
             </div>
           </div>
           <div className={styles.topBarRight}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Globe size={14} color="#FF9933" />
               <select 
-                value={language}
-                onChange={e => setLanguage(e.target.value as Language)}
-                style={{
-                  background: '#0F172A',
-                  color: '#FF9933',
-                  border: '1px solid #FF9933',
-                  borderRadius: '4px',
-                  padding: '2px 8px',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  cursor: 'pointer'
-                }}
-                title="Select Language"
+                value={language} 
+                onChange={(e) => setLanguage(e.target.value as Language)}
+                className={styles.langSelect}
+                aria-label="Language Selector"
               >
                 {SUPPORTED_LANGUAGES.map(lang => (
-                  <option key={lang.code} value={lang.code} style={{ background: '#0F172A', color: '#FFFFFF' }}>
+                  <option key={lang.code} value={lang.code}>
                     {lang.nativeName} ({lang.name})
                   </option>
                 ))}
               </select>
             </div>
-            <div className={styles.govFlag} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <IndiaFlag width={20} height={13} />
-              <span>MoSPI • SIH Initiative</span>
-            </div>
-            <Link href="/dashboard/notifications" className={styles.notifBtn}>
-              <Bell size={16} />
-              {unread > 0 && <span className={styles.notifDot}>{unread}</span>}
+
+            <Link href="/dashboard/notifications" className={styles.iconBtn} title="Notifications">
+              <Bell size={18} />
+              {unread > 0 && <span className={styles.notifDot} />}
+            </Link>
+
+            <Link href="/dashboard/profile" className={styles.profileBtn}>
+              <div className={styles.userAvatarSm}>{userInitials}</div>
+              <span className={styles.profileName}>{currentUser?.name || 'User'}</span>
             </Link>
           </div>
         </header>
 
+        {/* Page Content */}
         <main className={styles.content}>
           {children}
         </main>
-
-        {/* Mobile Bottom Navigation */}
-        <nav className={styles.mobileBottomNav}>
-          {MOBILE_BOTTOM_NAV.map(item => {
-            const active = pathname === item.href;
-            return (
-              <Link 
-                key={item.href} 
-                href={item.href} 
-                className={`${styles.mobileNavItem} ${active ? styles.mobileNavActive : ''}`}
-              >
-                <span className={styles.mobileNavIcon}>{item.icon}</span>
-                <span className={styles.mobileNavLabel}>{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className={styles.mobileBottomNav}>
+        {MOBILE_BOTTOM_NAV.map(item => {
+          const active = pathname === item.href;
+          return (
+            <Link 
+              key={item.href} 
+              href={item.href} 
+              className={`${styles.mobileNavItem} ${active ? styles.mobileNavActive : ''}`}
+            >
+              <span className={styles.mobileNavIcon}>{item.icon}</span>
+              <span className={styles.mobileNavLabel}>{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }

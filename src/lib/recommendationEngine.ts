@@ -1,127 +1,252 @@
-import igotCatalogData from '../../public/content-list-data.json';
+import catalogData from '../../public/content-list-data.json';
+import { buildUserLearningProfile, UserLearningProfile } from './competencyService';
+import { analyzeSkillGapFromProfile, SkillGapAnalysis, SkillGapItem } from './skillGapService';
+import { retrieveAndRankCourses, CourseRecommendationItem, RecommendationPipelineOutput } from './qdrantRetriever';
+import { CourseDocument } from './ingestionService';
 
-export interface IgotRawCourse {
-  identifier: string;
-  name: string;
-  description: string;
-  duration: string;
-  appIcon: string;
-  posterImage: string;
-  primaryCategory: string;
-  source: string;
-  objectType?: string;
-}
-
-export interface OrderedLearningStep {
-  phase: number;
-  phaseName: string;
-  recommendationReason: string;
-  estimatedHours: string;
-  targetCompetency: string;
-  course: IgotRawCourse;
-}
-
-/**
- * Role-Based Competency Sequence Catalog
- * Defines the strict, ordered competency journey for different statistical roles.
- */
-const ROLE_SEQUENTIAL_FRAMEWORK: Record<string, Array<{
-  phase: number;
-  phaseName: string;
-  keywords: string[];
-  targetCompetency: string;
+export interface StructuredLLMRecommendation {
+  courseId: string;
+  priority: number;
   reason: string;
-}>> = {
-  'Statistical Officer': [
-    {
-      phase: 1,
-      phaseName: 'Phase 1: Statistical Foundations & Literacy',
-      keywords: ['Statistical Literacy', 'Karmayogi', 'Development'],
-      targetCompetency: 'Statistical Methods & Survey Standards',
-      reason: 'Essential baseline competency required for statistical sample design and data collection accuracy.'
-    },
-    {
-      phase: 2,
-      phaseName: 'Phase 2: Digital Analytics & Data Reporting',
-      keywords: ['Report Writing Skills', 'AI for Digital Transformation', 'Computer Vision', 'Data'],
-      targetCompetency: 'Data Quality & AI Analytics',
-      reason: 'Identified gap in modern data visualization and automated report generation tools.'
-    },
-    {
-      phase: 3,
-      phaseName: 'Phase 3: Public Finance & Economic Accounts',
-      keywords: ['Budgetary System', 'Public Private Partnerships', 'Finance'],
-      targetCompetency: 'Economic Accounts & Governance',
-      reason: 'Necessary for evaluating district-level economic indicators and scheme budgetary allocations.'
-    },
-    {
-      phase: 4,
-      phaseName: 'Phase 4: Policy Integration & Leadership',
-      keywords: ['SAMARTH', 'Detailed Project Report', 'Design Thinking'],
-      targetCompetency: 'Policy Impact & Institutional Leadership',
-      reason: 'Advanced capability needed for leading multi-district survey operations and policy briefings.'
-    }
-  ],
-  'Data Analyst / Investigator': [
-    {
-      phase: 1,
-      phaseName: 'Phase 1: Fundamental Data & Soft Skills',
-      keywords: ['Statistical Literacy', 'Soft Skills'],
-      targetCompetency: 'Data Entry & Inspection Standards',
-      reason: 'Core requirement for field data validation and primary investigator hygiene.'
-    },
-    {
-      phase: 2,
-      phaseName: 'Phase 2: Applied AI & Technology',
-      keywords: ['AI led Digital Transformation', 'Computer Vision', 'Technology'],
-      targetCompetency: 'AI-assisted Quality Verification',
-      reason: 'Required for automated field image auditing and survey data cleansing.'
-    },
-    {
-      phase: 3,
-      phaseName: 'Phase 3: Official Documentation & Reporting',
-      keywords: ['Report Writing', 'Budgetary System'],
-      targetCompetency: 'Analytical Report Generation',
-      reason: 'Enables official to draft structured survey reports for senior management.'
-    }
-  ]
-};
+}
 
-/**
- * Extracts and orders courses strictly from the real iGOT content-list-data.json
- * based on the official's role and assessed skill gaps.
- */
-export function getOrderedRoleRecommendations(role: string = 'Statistical Officer'): OrderedLearningStep[] {
-  const rawList: IgotRawCourse[] = Array.isArray((igotCatalogData as any).content) 
-    ? (igotCatalogData as any).content 
-    : [];
+export interface StructuredRecommendationResponse {
+  targetRole: string;
+  userLearningProfile: UserLearningProfile;
+  skillGaps: SkillGapItem[];
+  retrieverSource: string;
+  embeddingModel: string;
+  statusMessage: string;
+  llmReranked: boolean;
+  recommendations: Array<{
+    courseId: string;
+    priority: number;
+    reason: string;
+    course: CourseDocument;
+  }>;
+}
 
-  const framework = ROLE_SEQUENTIAL_FRAMEWORK[role] || ROLE_SEQUENTIAL_FRAMEWORK['Statistical Officer'];
-  const orderedPath: OrderedLearningStep[] = [];
-  const usedIdentifiers = new Set<string>();
+export async function executeRecommendationPipeline(
+  user: any,
+  onboardingData: any,
+  assessmentResults: any,
+  courseProgressData: any = {}
+): Promise<StructuredRecommendationResponse> {
+  // 1. BUILD USER LEARNING PROFILE (Aggregating diagnostic exam, assessment, self-reported skills & quizzes)
+  const learningProfile: UserLearningProfile = buildUserLearningProfile(
+    user,
+    onboardingData,
+    assessmentResults,
+    courseProgressData
+  );
 
-  framework.forEach(stepSpec => {
-    // Find matching course strictly from the real iGOT catalog
-    const matchedCourse = rawList.find(c => {
-      if (!c.identifier || usedIdentifiers.has(c.identifier)) return false;
-      const titleAndDesc = `${c.name} ${c.description}`.toLowerCase();
-      return stepSpec.keywords.some(kw => titleAndDesc.includes(kw.toLowerCase()));
-    });
+  // 2. CALCULATE SKILL GAPS & BUILD SEMANTIC RETRIEVAL QUERY
+  const skillGapAnalysis: SkillGapAnalysis = analyzeSkillGapFromProfile(learningProfile);
 
-    if (matchedCourse) {
-      usedIdentifiers.add(matchedCourse.identifier);
-      const hoursNum = Math.max(1, Math.round(parseInt(matchedCourse.duration || '3600', 10) / 3600));
-      
-      orderedPath.push({
-        phase: stepSpec.phase,
-        phaseName: stepSpec.phaseName,
-        targetCompetency: stepSpec.targetCompetency,
-        recommendationReason: stepSpec.reason,
-        estimatedHours: `${hoursNum} Hours`,
-        course: matchedCourse
-      });
+  // 3. RETRIEVE CANDIDATE COURSES FROM QDRANT (Filtering out completed courses)
+  const pipelineOutput: RecommendationPipelineOutput = await retrieveAndRankCourses(
+    skillGapAnalysis,
+    learningProfile.completedCourseIds,
+    15 // candidate set limit
+  );
+
+  const candidateCourses = pipelineOutput.candidateCourses || [];
+  const validCourseMap = new Map<string, CourseDocument>();
+  
+  candidateCourses.forEach(c => {
+    validCourseMap.set(c.id.toLowerCase(), c);
+    validCourseMap.set(`course-${c.numericId}`.toLowerCase(), c);
+  });
+
+  // Also index fallback catalog
+  const catalogList: CourseDocument[] = (catalogData as any).content || [];
+  catalogList.forEach(c => {
+    if (!validCourseMap.has(c.id.toLowerCase())) {
+      validCourseMap.set(c.id.toLowerCase(), c);
+      validCourseMap.set(`course-${c.numericId}`.toLowerCase(), c);
     }
   });
 
-  return orderedPath;
+  // 4. GROQ LLM STRUCTURED RERANKER
+  let llmRecommendations: StructuredLLMRecommendation[] = [];
+  let llmReranked = false;
+
+  const apiKey = process.env.GROQ_API_KEY;
+  const model = process.env.GROQ_MODEL || 'qwen-2.5-32b';
+  const baseUrl = process.env.GROQ_BASE_URL || 'https://api.groq.com/openai/v1';
+
+  const isApiKeyValid = Boolean(apiKey && apiKey !== 'your_groq_api_key_here' && apiKey.trim().length > 0);
+
+  if (isApiKeyValid && candidateCourses.length > 0) {
+    try {
+      console.log(`🤖 [LLM Reranker] Invoking Groq LLM (${model}) to rerank Qdrant candidates...`);
+
+      const prompt = `You are a Course Recommendation Reranking Engine for StatPath AI.
+
+User Profile Context:
+- Target Career Role: ${learningProfile.targetRole}
+- Identified Skill Gaps: ${JSON.stringify(skillGapAnalysis.structuredGaps, null, 2)}
+- Completed / Excluded Courses: ${learningProfile.completedCourseIds.join(', ') || 'None'}
+
+Retrieved Qdrant Candidate Courses (ONLY RERANK THESE COURSES):
+${JSON.stringify(candidateCourses.map(c => ({
+  courseId: c.id,
+  title: c.title,
+  level: c.level,
+  competency: c.competency,
+  description: c.description
+})), null, 2)}
+
+STRICT RERANKING RULES:
+1. Select the top 5 most relevant courses from the provided candidates to help the user close their skill gaps.
+2. DO NOT invent any course IDs, titles, URLs, or metadata. Every courseId in your output MUST match an exact courseId from the candidates list.
+3. Return ONLY a valid JSON object matching this schema (no markdown formatting, no code blocks):
+
+{
+  "recommendations": [
+    {
+      "courseId": "string (exact candidate courseId)",
+      "priority": number (1 to 5),
+      "reason": "string (justifying why this course closes a specific skill gap)"
+    }
+  ]
+}
+`;
+
+      const response = await fetch(`${baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            {
+              role: 'system',
+              content: 'You are an AI reranker that outputs raw JSON objects matching the specified schema, without markdown formatting.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0.2,
+          max_tokens: 1500
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content?.trim();
+        if (content) {
+          const jsonStr = content.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
+          const parsed = JSON.parse(jsonStr);
+          if (parsed && Array.isArray(parsed.recommendations)) {
+            llmRecommendations = parsed.recommendations;
+            llmReranked = true;
+            console.log(`✅ [LLM Reranker] Groq LLM successfully reranked ${llmRecommendations.length} courses.`);
+          }
+        }
+      }
+    } catch (err: any) {
+      console.warn(`⚠️ [LLM Reranker] Exception calling Groq LLM: ${err.message}. Using Qdrant candidate score ranking.`);
+    }
+  }
+
+  // 5. VALIDATE LLM OUTPUT & RESOLVE COURSE OBJECTS
+  const finalRecommendations: Array<{
+    courseId: string;
+    priority: number;
+    reason: string;
+    course: CourseDocument;
+  }> = [];
+
+  const addedIds = new Set<string>();
+
+  if (llmReranked && llmRecommendations.length > 0) {
+    llmRecommendations.forEach((rec, idx) => {
+      const cleanId = rec.courseId.toLowerCase();
+      const resolvedCourse = validCourseMap.get(cleanId);
+      
+      // STRICT RULE: Only accept course IDs that exist in the retrieved Qdrant candidate set!
+      if (resolvedCourse && !addedIds.has(resolvedCourse.id)) {
+        addedIds.add(resolvedCourse.id);
+        finalRecommendations.push({
+          courseId: resolvedCourse.id,
+          priority: rec.priority || (idx + 1),
+          reason: rec.reason || `Addresses identified skill gap for ${learningProfile.targetRole}.`,
+          course: resolvedCourse
+        });
+      } else {
+        console.warn(`⚠️ [LLM Validation] Discarded invalid or unknown courseId from LLM response: "${rec.courseId}"`);
+      }
+    });
+  }
+
+  // Fallback if LLM was skipped or returned empty/invalid IDs: Use Qdrant ranked candidates directly
+  if (finalRecommendations.length === 0) {
+    pipelineOutput.recommendations.slice(0, 5).forEach((recItem, idx) => {
+      const resolvedCourse = validCourseMap.get(recItem.course_id.toLowerCase()) || {
+        id: recItem.course_id,
+        numericId: recItem.numericId,
+        title: recItem.title,
+        level: recItem.level,
+        competency: recItem.competency,
+        domain: recItem.domain,
+        description: recItem.description
+      };
+
+      if (!addedIds.has(resolvedCourse.id)) {
+        addedIds.add(resolvedCourse.id);
+        finalRecommendations.push({
+          courseId: resolvedCourse.id,
+          priority: idx + 1,
+          reason: recItem.reason,
+          course: resolvedCourse
+        });
+      }
+    });
+  }
+
+  return {
+    targetRole: learningProfile.targetRole,
+    userLearningProfile: learningProfile,
+    skillGaps: skillGapAnalysis.structuredGaps,
+    retrieverSource: pipelineOutput.retrieverSource,
+    embeddingModel: pipelineOutput.embeddingModel,
+    statusMessage: pipelineOutput.statusMessage,
+    llmReranked,
+    recommendations: finalRecommendations
+  };
+}
+
+export function getOrderedRoleRecommendations(
+  role: string = 'Statistical Officer',
+  customAssessmentResults?: any
+) {
+  const rawList: CourseDocument[] = Array.isArray((catalogData as any).content)
+    ? (catalogData as any).content
+    : [];
+
+  return rawList.map((c, idx) => ({
+    phase: idx + 1,
+    phaseName: `Phase ${idx + 1}: ${c.competency || c.domain || 'Domain Skill'}`,
+    targetCompetency: c.competency || 'Core Competency',
+    recommendationReason: c.description || `Builds foundational proficiency for ${c.level || 'Beginner'} level.`,
+    estimatedHours: '2 Hours',
+    course: {
+      identifier: c.id,
+      name: c.title,
+      description: c.description,
+      duration: '7200',
+      appIcon: '',
+      posterImage: '',
+      primaryCategory: c.domain || 'Course',
+      source: c.domain || 'Official Competency Portal',
+      level: c.level,
+      competency: c.competency,
+      domain: c.domain
+    }
+  }));
 }
