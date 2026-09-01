@@ -110,6 +110,29 @@ export const getCurrentUser = (): UserProfile | null => {
   }
 };
 
+export const updateCurrentUserProfile = (updatedFields: Partial<UserProfile>): UserProfile | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const current = getCurrentUser();
+    if (!current) return null;
+    // empId is locked and cannot be edited
+    const updated = { ...current, ...updatedFields, empId: current.empId };
+    
+    localStorage.setItem(STORAGE_KEYS.CURRENT, JSON.stringify(updated));
+
+    const users = getRegisteredUsers();
+    const idx = users.findIndex(u => u.empId.toLowerCase() === current.empId.toLowerCase());
+    if (idx !== -1) {
+      users[idx] = { ...users[idx], ...updated };
+      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+    }
+    return updated;
+  } catch (e) {
+    console.error('Failed to update user profile', e);
+    return null;
+  }
+};
+
 export const logoutUser = () => {
   if (typeof window === 'undefined') return;
   try {

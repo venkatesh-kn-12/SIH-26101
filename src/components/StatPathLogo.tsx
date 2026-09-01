@@ -7,10 +7,10 @@ export const StatPathLogo: React.FC<{ size?: number }> = ({ size = 38 }) => {
       style={{
         width: size,
         height: size,
-        borderRadius: '10px',
-        background: 'linear-gradient(135deg, #0F172A 0%, #003087 100%)',
-        border: '1.5px solid #FF9933',
-        boxShadow: '0 2px 8px rgba(0, 48, 135, 0.35)',
+        borderRadius: '12px',
+        background: 'linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #003087 100%)',
+        border: '1.5px solid #60A5FA',
+        boxShadow: '0 4px 12px rgba(30, 58, 138, 0.4)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -19,7 +19,6 @@ export const StatPathLogo: React.FC<{ size?: number }> = ({ size = 38 }) => {
         flexShrink: 0,
       }}
     >
-      {/* Subtle Background Grid Accent */}
       <svg
         width={size}
         height={size}
@@ -27,25 +26,27 @@ export const StatPathLogo: React.FC<{ size?: number }> = ({ size = 38 }) => {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M4 32H36" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1" strokeDasharray="2 2" />
-        <path d="M4 24H36" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1" strokeDasharray="2 2" />
-        <path d="M4 16H36" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1" strokeDasharray="2 2" />
+        {/* Universal Neural Skill Compass Ring */}
+        <circle cx="20" cy="20" r="14" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="1.5" strokeDasharray="3 2" />
+        <circle cx="20" cy="20" r="8" stroke="rgba(96, 165, 250, 0.4)" strokeWidth="1" />
         
-        {/* Statistical Growth Bars */}
-        <rect x="8" y="22" width="4" height="10" rx="1" fill="#FF9933" />
-        <rect x="15" y="16" width="4" height="16" rx="1" fill="#FFFFFF" opacity="0.9" />
-        <rect x="22" y="10" width="4" height="22" rx="1" fill="#138808" />
+        {/* Universal Competency Diamond Nodes */}
+        <path d="M20 7L24 16L33 20L24 24L20 33L16 24L7 20L16 16L20 7Z" fill="url(#sparkleGrad)" opacity="0.95" />
         
-        {/* AI Pathway Line & Sparkle Node */}
-        <path
-          d="M10 21L17 15L24 9L32 14"
-          stroke="#F7B801"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="32" cy="14" r="2.5" fill="#F7B801" />
+        {/* Central Core Element */}
+        <circle cx="20" cy="20" r="3.5" fill="#FF9933" />
+        <circle cx="20" cy="20" r="1.5" fill="#FFFFFF" />
+        
+        <defs>
+          <linearGradient id="sparkleGrad" x1="7" y1="7" x2="33" y2="33" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#60A5FA" />
+            <stop offset="0.5" stopColor="#3B82F6" />
+            <stop offset="1" stopColor="#F59E0B" />
+          </linearGradient>
+        </defs>
       </svg>
     </div>
   );
 };
+
+export const SkillPathLogo = StatPathLogo;
